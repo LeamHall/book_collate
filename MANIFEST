@@ -1,0 +1,18 @@
+Build.PL
+Changes
+lib/Book/Collate.pm
+lib/Book/Collate/Book.pm
+lib/Book/Collate/Report.pm
+lib/Book/Collate/Section.pm
+LICENSE
+MANIFEST			This list of files
+META.json
+META.yml
+README
+README.md
+t/00-load.t
+t/01-kwalitee.t
+t/manifest.t
+t/pod-coverage.t
+t/pod.t
+xt/boilerplate.t

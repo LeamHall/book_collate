@@ -168,7 +168,8 @@ sub write_report {
   my $self  = shift;
   my $num   = 1; 
   foreach my $section ( @{$self->sections} ){
-    my $report_file = $self->book_dir . '/' . $self->report_dir . "/report_${num}.txt";
+    #my $report_file = $self->book_dir . '/' . $self->report_dir . "/report_${num}.txt";
+    my $report_file = $self->report_dir . "/report_${num}.txt";
     open( my $file, '>', $report_file ) or die "Can't open $report_file: $!";
     print $file $section->write_report;
     close($file);
@@ -186,7 +187,8 @@ Writes the text version of the file.
 sub write_text {
   my ($self)      = @_; 
   my $title = $self->title;
-  my $text_file   = $self->book_dir . '/' . $self->output_dir . '/' . $self->file_name . '.txt';
+  #my $text_file   = $self->book_dir . '/' . $self->output_dir . '/' . $self->file_name . '.txt';
+  my $text_file   = $self->output_dir . '/' . $self->file_name . '.txt';
   my $section_break   = "\n__section_break__\n";
 
   open( my $file, '>', $text_file) or die "Can't open $text_file: $!";

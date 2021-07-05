@@ -225,8 +225,7 @@ Writes the report data.
 sub _write_report {
   my ($self)  = @_;
   my $text = $self->headless_data;
-  use Book::Collate::Report;
-  $self->{_report} = Report->new( string => $self->headless_data() );
+  $self->{_report} = Book::Collate::Report->new( string => $self->headless_data() );
 }
 
 =head2 _write_headless_data

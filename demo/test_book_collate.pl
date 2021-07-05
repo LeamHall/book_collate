@@ -52,6 +52,7 @@ my %configs  = (
 
 ## Set up for GetOptions
 my $book_dir;
+my $report_dir;
 my $config_file = 'book_config.yml';
 my $help;
 
@@ -84,9 +85,16 @@ unless ( $book_dir ) {
   $book_dir = $configs{book_dir};
 }
 if ( ! -d $book_dir ) {
-  print "No directory $book_dir. Exiting.\n";
-  exit;
+  mkdir $book_dir;
 }
+
+unless ( $report_dir ) {
+  $report_dir = $configs{report_dir};
+}
+if ( ! -d $report_dir ) {
+  mkdir $report_dir;
+}
+
 
 # Set the main variables.
 my $sections_dir    = $configs{section_dir};
@@ -97,7 +105,7 @@ $configs{file_name} = file_name_from_title( $configs{title} );
 ## And away we go!
 opendir( my $dir, $sections_dir) or die "Can't open $sections_dir: $!";
 
-my $book = Book->new( 
+my $book = Book::Collate::Book->new( 
   author      => $configs{author}, 
   book_dir    => $configs{book_dir},
   file_name   => $configs{file_name},
@@ -120,7 +128,7 @@ foreach my $file (@files) {
       $raw_data = <$fh>;
       close($fh);
     }
-    my $section = Section->new(
+    my $section = Book::Collate::Section->new(
       number      => $section_number,
       raw_data    => $raw_data,
       has_header  => 1,

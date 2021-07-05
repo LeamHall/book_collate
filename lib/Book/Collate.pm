@@ -10,44 +10,27 @@ Book::Collate - Tools to Collate and Report Text Documents
 
 =head1 VERSION
 
-Version 0.01
+Version 0.0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.0.01';
 
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
+Tools allow iteration through text files and generation of a single combined
+file or a set of modified individual files. They can provide grade level and 
+word count reports.
 
-Perhaps a little code snippet.
+=cut 
 
-    use Book::Collate;
+#use lib 'lib/Book/Collate';
+use Book::Collate::Section;
+use Book::Collate::Book;
+use Book::Collate::Report;
+#use Text;
 
-    my $foo = Book::Collate->new();
-    ...
-
-=head1 EXPORT
-
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
-
-=head1 SUBROUTINES/METHODS
-
-=head2 function1
-
-=cut
-
-sub function1 {
-}
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
 
 =head1 AUTHOR
 
@@ -55,9 +38,11 @@ Leam Hall, C<< <leamhall at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-book::collate at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Book::Collate>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
+Please report any bugs or feature requests to i
+C<bug-book::collate at rt.cpan.org>, or through the web interface at 
+L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=Book::Collate>.  
+I will be notified, and then you'll automatically be notified of progress 
+on your bug as I make changes.
 
 
 

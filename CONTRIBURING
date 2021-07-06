@@ -1,0 +1,22 @@
+CONTRIBUTING
+
+If you want to contribute but are not sure what needs doing, see the issue:
+
+  https://github.com/LeamHall/book_collate/issues
+
+If you see something larger that needs work, but isn't yet an issue, please
+create an issue tracker and we can talk about it. 
+
+Bugs are tracked through RT:
+
+  https://rt.cpan.org/NoAuth/Bugs.html?Dist=Book::Collate
+
+Here are some general guidelines
+
+  Stay with the Perl Standard Library as much as possible.
+   - Pure Perl, no XS.
+
+  Pull requests rather than patches. 
+   - Please do pull requests on branches.
+   - Please add an entry for each change in Changes as well.
+

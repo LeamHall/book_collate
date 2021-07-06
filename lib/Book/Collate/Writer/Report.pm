@@ -40,7 +40,7 @@ sub write_report_book {
   my $self  = shift;
   my $num   = 100; 
   # This assumes it is given a book object, which has section objects.
-  print STDOUT "title is $self->title().\n";
+  print STDOUT "title is " . $self->title() . ".\n";
   foreach my $section ( @{$self->sections()} ){
     #my $report_file = $self->book_dir . '/' . $self->report_dir . "/report_${num}.txt";
     my $report_file = $self->report_dir . "/report_${num}.txt";

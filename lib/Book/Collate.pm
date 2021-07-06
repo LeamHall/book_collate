@@ -29,6 +29,7 @@ word count reports.
 use Book::Collate::Section;
 use Book::Collate::Book;
 use Book::Collate::Report;
+use Book::Collate::Writer::Report;
 #use Text;
 
 

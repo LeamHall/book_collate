@@ -37,18 +37,13 @@ Takes a book object, iterates through the sections, and writes the reports.
 =cut
 
 sub write_report_book {
-  my $self  = shift;
-  my $num   = 100; 
+  my ($self, $book)  = @_;
   # This assumes it is given a book object, which has section objects.
-  print STDOUT "title is " . $self->title() . ".\n";
-  foreach my $section ( @{$self->sections()} ){
-    #my $report_file = $self->book_dir . '/' . $self->report_dir . "/report_${num}.txt";
-    my $report_file = $self->report_dir . "/report_${num}.txt";
+  foreach my $section ( @{$book->sections()} ){
+    my $report_file = $book->report_dir . "/report_" . $section->filename();
     open( my $file, '>', $report_file ) or die "Can't open $report_file: $!";
-    #print $file $section->write_report;
     print $file write_report_section($section);
     close($file);
-    $num += 1;
   }
   return;
 }
@@ -61,7 +56,9 @@ Takes a section object and returns the stringified report.
 
 sub write_report_section {
   my $self    = shift;
-  my $string  = "Grade Level: " . $self->grade_level() . "\n";
+  my $string  = "Grade Level:             " . $self->grade_level() . "\n";
+  $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
+  $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
   $string     .= "Word Frequency List:\n";
   my %word_list = $self->{_report}->sorted_word_list();
   my @unsorted_keys = ( keys %word_list );

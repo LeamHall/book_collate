@@ -30,6 +30,7 @@ Section Object
       Al looked again, and he was there.",
       has_header  => 1,
       number      => 1,
+      file        => '1429_123_0457_nowhere',
     );
 
 =head1 SUBROUTINES/METHODS
@@ -55,6 +56,7 @@ sub new {
     _raw_data       => $data{raw_data},
     _report         => undef,
     _title          => undef,
+    _filename       => $data{filename},
   };
   bless $self, $class;
   $self->_write_headless_data();
@@ -80,6 +82,15 @@ sub avg_word_length {
   my ( $self ) = @_;
   return $self->{_report}->avg_word_length;
 }
+
+=head2 filename
+
+Returns the filename of the section.
+
+=cut
+
+sub filename { return $_[0]->{_filename}; }
+
 
 =head2 grade_level
 

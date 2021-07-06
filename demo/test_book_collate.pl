@@ -115,7 +115,6 @@ my $book = Book::Collate::Book->new(
 );
 
 my $t = $book->title();
-print "In the demo, the book title is $t.\n";
 ## Build sections and put them into the Book.
 # This would be cool for a builder object.
 my $section_number = 1;
@@ -134,6 +133,7 @@ foreach my $file (@files) {
       number      => $section_number,
       raw_data    => $raw_data,
       has_header  => 1,
+      filename    => $file,
     );
     $book->add_section($section);
     $section_number++;    
@@ -143,7 +143,6 @@ foreach my $file (@files) {
 close($dir);
 
 $book->write_text; 
-#$book->write_report;
 Book::Collate::Writer::Report->write_report_book($book);
 
 

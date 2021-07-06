@@ -21,6 +21,8 @@ _build/
 Build
 Build.bat
 
+/Book-Collate-*
+
 # Module::Install
 inc/
 

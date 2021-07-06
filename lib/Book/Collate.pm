@@ -10,11 +10,11 @@ Book::Collate - Tools to Collate and Report Text Documents
 
 =head1 VERSION
 
-Version 0.0.01
+Version 0.0.1
 
 =cut
 
-our $VERSION = '0.0.01';
+our $VERSION = 'v0.0.1';
 
 
 =head1 SYNOPSIS

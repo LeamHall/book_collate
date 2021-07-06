@@ -87,7 +87,7 @@
 ^MANIFEST\.SKIP
 
 # Avoid archives of this distribution
-\bBook-Collate-[\d\.\_]+
+\bBook-Collate-
 
 # Active vim session files
 \b\.swp
@@ -98,4 +98,8 @@
 # Other stuff
 \Bdemo
 \bt/manifest.t
+
+# No META files.
+\bMETA.json
+\BMETA.yml
 

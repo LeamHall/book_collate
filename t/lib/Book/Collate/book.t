@@ -23,7 +23,7 @@ my $section_2 = 'Al';
 my $book      = Book::Collate::Book->new(
   author      => 'Leam Hall',
   book_dir    => '/home/leam/mybook',
-  blurb_file  => 'tmp/navaksen_blurb.txt',
+  blurb_file  => 't/data/navaksen_blurb.txt',
   file_name   => 'al_rides_again',
   image       => 'images/navaksen_low.jpg',
   output_dir  => 'book',
@@ -38,7 +38,7 @@ use_ok( 'Book::Collate::Book' ) or die $!;
 isa_ok( $book, 'Book::Collate::Book');
 
 ok( $book->author     eq 'Leam Hall',         'Returns author' );
-#ok( $book->blurb      eq $ns_blurb,           'Returns book blurb' );
+ok( $book->blurb      eq $ns_blurb,           'Returns book blurb' );
 ok( $book->book_dir   eq '/home/leam/mybook', 'Returns output_dir' );
 ok( $book->file_name  eq 'al_rides_again',    'Returns book file_name' );
 ok( $book->image      eq $ns_image,           'Returns the image location' );

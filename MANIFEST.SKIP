@@ -98,6 +98,7 @@
 # Other stuff
 \Bdemo
 \bt/manifest.t
+\bxt*
 
 # No META files.
 \bMETA.json

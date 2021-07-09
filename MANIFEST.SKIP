@@ -96,7 +96,7 @@
 \b\.git/
 
 # Other stuff
-\Bdemo
+\Bdemo/
 \bt/manifest.t
 \bxt*
 

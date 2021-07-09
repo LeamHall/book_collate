@@ -1,6 +1,5 @@
 Build.PL
 Changes
-demo/test_book_collate.pl
 lib/Book/Collate.pm
 lib/Book/Collate/Book.pm
 lib/Book/Collate/Report.pm

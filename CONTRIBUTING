@@ -7,16 +7,19 @@ If you want to contribute but are not sure what needs doing, see the issue:
 If you see something larger that needs work, but isn't yet an issue, please
 create an issue tracker and we can talk about it. 
 
-Bugs are tracked through RT:
-
-  https://rt.cpan.org/NoAuth/Bugs.html?Dist=Book::Collate
-
 Here are some general guidelines
 
   Stay with the Perl Standard Library as much as possible.
    - Pure Perl, no XS.
 
   Pull requests rather than patches. 
-   - Please do pull requests on branches.
    - Please add an entry for each change in Changes as well.
 
+  Tests, using Test::More.
+   - No tests, no code. 
+
+  PerlTidy
+    -b --log -ce -nsbl -io -i=4 -l=78 -ndws -valign
+
+  PerlCritic
+   - Resolve any 5 and 4 issues. See what you can do on 3s.

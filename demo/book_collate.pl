@@ -1,29 +1,35 @@
 #!/usr/bin/env perl
 
+# name:     book_collate.pl
+# version:  0.0.1
+# date:     20210709
+# author:   Leam Hall
+# desc:     Sample code for using Book::Collate
+
 # Test command
 # Run in a directory containing the text files.
 #
-# perl -I/home/leam/lang/git/LeamHall/book_collate/lib /home/leam/lang/git/LeamHall/book_collate/demo/test_book_collate.pl 
+# /usr/local/bin/book_collate.pl 
 
+# Notes:
+#   Requires YAML::Tiny.
 
 use strict;
 use warnings;
 
 use Getopt::Long;
 use YAML::Tiny;
+use Carp;
 
-#use lib "lib";
-#use Book;
-#use Section;
 use Book::Collate;
 
 # subroutines 
 sub file_name_from_title {
   (my $file_name)     = @_;
-  $file_name          =~ s/[\W]/ /g;
+  $file_name          =~ s/[\W]/ /gxm;
   $file_name          = lc($file_name);
-  $file_name          =~ s/\s*$//;
-  $file_name          =~ s/\s+/_/g;
+  $file_name          =~ s/\s*$//xm;
+  $file_name          =~ s/\s+/_/gxm;
   return $file_name;
 }
 
@@ -35,7 +41,7 @@ sub show_help {
   exit;
 }
 
-### Config precedence:
+### Config precedence, highest to lowest:
 ##  1. Command Line Options
 ##  2. Config file variables
 ##  3. Defaults
@@ -69,14 +75,9 @@ my %file_configs;
 if ( -f $config_file ) {
   eval {
     %file_configs = %{YAML::Tiny::LoadFile($config_file)};
-  }; 
-  if ( $@ ) {
-    print "Could not parse $config_file, exiting.\n";
-    exit;
-  }
+  } or croak "Can't parse $config_file."; 
 } else {
-  print "No config file found, exiting.\n";
-  exit;
+  croak "No config file found, exiting.\n";
 }
   
 ## Merge config file into %config, then CLI.
@@ -103,7 +104,7 @@ my $sections_dir    = $configs{section_dir};
 $configs{file_name} = file_name_from_title( $configs{title} );
 
 ## And away we go!
-opendir( my $dir, $sections_dir) or die "Can't open $sections_dir: $!";
+opendir( my $dir, $sections_dir) or croak "Can't open $sections_dir: $!";
 
 my $book = Book::Collate::Book->new( 
   author      => $configs{author}, 
@@ -123,7 +124,7 @@ foreach my $file (@files) {
   if ( -f "$sections_dir/$file" ) {
     my $raw_data; 
     my $opened  = open( my $fh, '<', "$sections_dir/$file") 
-      or die "Can't open $sections_dir/$file: $!";
+      or croak "Can't open $sections_dir/$file: $!";
     if ( $opened ) {
       local $/ = undef;
       $raw_data = <$fh>;
@@ -144,6 +145,5 @@ close($dir);
 
 $book->write_text; 
 Book::Collate::Writer::Report->write_report_book($book);
-
 
 

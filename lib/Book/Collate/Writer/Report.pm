@@ -30,6 +30,71 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =head1 SUBROUTINES/METHODS
 
+=head2 _generate_fry_stats
+
+Gives a percentage of Fry list words used against the total unique words used.
+
+=cut
+
+sub _generate_fry_stats {
+  my ( $word_list ) = @_;
+  my %word_list = %$word_list; 
+  my %fry_words = %Book::Collate::Words::fry;
+  my %used_words;
+  my %missed;
+  my %fry_used = (
+    fry     => 0,
+    custom  => 0,
+    miss    => 0,
+  );
+  foreach my $word ( keys %word_list ){
+    $word = scrub_word($word);
+    $used_words{$word} = 1;
+  } 
+
+  foreach my $word ( keys %used_words ){
+    if ( defined($fry_words{$word}) ){
+      $fry_used{fry}++;
+    } else {
+      $fry_used{miss}++;
+      $missed{$word} = 1;
+    }   
+  }
+  return %fry_used;
+}
+
+=head2 scrub_word
+
+Scrubs a series of characters of case and punctuation.
+ 
+=cut
+
+sub scrub_word {
+  my ($word)  = @_;
+  chomp $word;
+  $word =~ s/["?!.]//g;
+  $word =~ s/'$//;
+  $word =~ s/\-$//;
+  $word = lc($word);
+  return $word;
+}
+
+=head2 write_fry_stats
+
+Produces a string based on Fry word usage.
+
+=cut
+
+sub write_fry_stats {
+  my ( $word_list ) = @_;
+  my %fry_used  = _generate_fry_stats( $word_list );
+  my $string    = "Fry Word Usage: \n";
+  $string       .= "  Used   " . $fry_used{fry}     . "\n";
+  $string       .= "  Custom " . $fry_used{custom}  . "\n";
+  $string       .= "  Miss   " . $fry_used{miss}    . "\n";
+  return $string;
+}
+
 =head2 write_report_book
 
 Takes a book object, iterates through the sections, and writes the reports.
@@ -38,13 +103,19 @@ Takes a book object, iterates through the sections, and writes the reports.
 
 sub write_report_book {
   my ($self, $book)  = @_;
+  my %word_list;
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
-    my $report_file = $book->report_dir . "/report_" . $section->filename();
-    open( my $file, '>', $report_file ) or die "Can't open $report_file: $!";
-    print $file write_report_section($section);
-    close($file);
+    my $section_report_file = $book->report_dir . "/report_" . $section->filename();
+    open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
+    %word_list = ( %word_list, $section->word_list() );
+    print $section_file write_report_section($section);
+    close($section_file);
   }
+  my $book_report_file = $book->report_dir . "/book_report.txt";
+  open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
+  print $book_file  write_fry_stats(\%word_list);
+  close $book_file;
   return;
 }
 
@@ -76,17 +147,32 @@ sub write_report_section {
   return $string;
 }
 
+=head2 write_used_words
+
+Returns a hash of words used in the text.
+
+=cut
+
+sub used_words {
+  my  @word_list  = @_;
+  #my @word_list = @$word_list;
+  my %used_words;
+  foreach my $word ( @word_list ){
+    $word = lc($word);
+    $used_words{$word} = 1; 
+  }
+
+  return %used_words;
+}
+
+
 =head1 AUTHOR
 
 Leam Hall, C<< <leamhall at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to C<bug-. at rt.cpan.org>, or through
-the web interface at L<https://rt.cpan.org/NoAuth/ReportBug.html?Queue=.>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
+Please report any bugs or feature requests to L<https://github.com/LeamHall/book_collate/issues>.
 
 
 =head1 SUPPORT
@@ -99,10 +185,6 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
-
-=item * RT: CPAN's request tracker (report bugs here)
-
-L<https://rt.cpan.org/NoAuth/Bugs.html?Dist=.>
 
 =item * CPAN Ratings
 

@@ -39,3 +39,6 @@ inc/
 # Active vi sessions.
 *.swp
 *.swo
+
+# tmp files
+/tmp

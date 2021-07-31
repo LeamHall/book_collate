@@ -51,7 +51,23 @@ sub new {
     _sections   => [],  
     _title      => $data{title},
     _url        => $data{url},
+    _words      => {},
   }, $class;
+}
+
+=head2 add_words
+
+Adds words from each section to the $self->_words hash.
+
+=cut
+
+sub add_words {
+  my ( $self, $word_list ) = @_;
+  my @word_list = @$word_list;
+  foreach my $word ( @word_list ) {
+    $self->{_words}{$word} = 1;
+  } 
+  return;
 }
 
 =head2 add_section
@@ -158,6 +174,7 @@ Return the URL of the book.
 
 sub url       { $_[0]->{_url}       };
 
+
 =head2 write_report
 
 Writes the report files.
@@ -168,7 +185,6 @@ sub write_report {
   my $self  = shift;
   my $num   = 1; 
   foreach my $section ( @{$self->sections} ){
-    #my $report_file = $self->book_dir . '/' . $self->report_dir . "/report_${num}.txt";
     my $report_file = $self->report_dir . "/report_${num}.txt";
     open( my $file, '>', $report_file ) or die "Can't open $report_file: $!";
     print $file $section->write_report;
@@ -187,7 +203,6 @@ Writes the text version of the file.
 sub write_text {
   my ($self)      = @_; 
   my $title = $self->title;
-  #my $text_file   = $self->book_dir . '/' . $self->output_dir . '/' . $self->file_name . '.txt';
   my $text_file   = $self->output_dir . '/' . $self->file_name . '.txt';
   my $section_break   = "\n__section_break__\n";
 
@@ -210,7 +225,7 @@ Leam Hall, C<< <leamhall at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to L<https://github.com/LeamHall/bookbot/issues>.
+Please report any bugs or feature requests to L<https://github.com/LeamHall/book_collate/issues>.
 
 
 

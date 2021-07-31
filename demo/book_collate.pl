@@ -14,6 +14,7 @@
 # Notes:
 #   Requires YAML::Tiny.
 
+
 use strict;
 use warnings;
 
@@ -21,6 +22,7 @@ use Getopt::Long;
 use YAML::Tiny;
 use Carp;
 
+use lib 'lib';
 use Book::Collate;
 
 # subroutines 

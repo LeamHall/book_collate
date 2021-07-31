@@ -160,6 +160,19 @@ Returns the number of sentences.
 sub sentence_count { $_[0]->{_report}->sentence_count };
 
 
+=head2 sorted_word_list
+
+Returns a hash of the words used, in lowercase, with the usage count of that word as the key.
+
+=cut
+
+sub sorted_word_list {
+  my $self  = shift;
+  my %word_list = $self->{_report}->sorted_word_list();
+  return %word_list;
+}
+
+
 =head2 title
 
 Returns the title.
@@ -196,7 +209,7 @@ Returns a hash of the words used, in lowercase, with the usage count of that wor
 
 sub word_list {
   my $self  = shift;
-  my %word_list = $self->{_report}->sorted_word_list();
+  my %word_list = $self->{_report}->word_list();
   return %word_list;
 }
 
@@ -262,7 +275,7 @@ Leam Hall, C<< <leamhall at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to L<https://github.com/LeamHall/bookbot/issues>.  
+Please report any bugs or feature requests to L<https://github.com/LeamHall/book_collate/issues>.  
 
 
 

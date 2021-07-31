@@ -192,7 +192,8 @@ Leam Hall, C<< <leamhall at gmail.com> >>
 
 =head1 BUGS
 
-Please report any bugs or feature requests to L<https://github.com/LeamHall/bookbot/issues>.  
+Please report any bugs or feature requests to L<https://github.com/LeamHall/book_collate/issues>.  
+
 
 
 

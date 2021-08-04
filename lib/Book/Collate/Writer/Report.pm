@@ -130,14 +130,16 @@ sub write_report_section {
   my $string  = "Grade Level:             " . $self->grade_level() . "\n";
   $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
   $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
+  my %word_list = $self->{_report}->word_list();
+  $string     .= write_fry_stats(\%word_list);
   $string     .= "Word Frequency List:\n";
-  my %word_list = $self->{_report}->sorted_word_list();
-  my @unsorted_keys = ( keys %word_list );
+  my %sorted_word_list = $self->{_report}->sorted_word_list();
+  my @unsorted_keys = ( keys %sorted_word_list );
   my @sorted_keys = reverse ( sort { $a <=> $b } @unsorted_keys );
   my $max_keys = 25;
   foreach my $count ( @sorted_keys ){
     $string .= "  $count  ";
-    foreach my $word ( @{$word_list{$count}} ){
+    foreach my $word ( @{$sorted_word_list{$count}} ){
       $string .= " $word";
     }
     $string .= "\n";

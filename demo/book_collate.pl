@@ -9,7 +9,7 @@
 # Test command
 # Run in a directory containing the text files.
 #
-# /usr/local/bin/book_collate.pl 
+# perl -I<path to lib> <path to>/book_collate.pl 
 
 # Notes:
 #   Requires YAML::Tiny.
@@ -21,9 +21,9 @@ use warnings;
 use Getopt::Long;
 use YAML::Tiny;
 use Carp;
-
 use lib 'lib';
 use Book::Collate;
+
 
 # subroutines 
 sub file_name_from_title {
@@ -97,7 +97,6 @@ unless ( $report_dir ) {
 if ( ! -d $report_dir ) {
   mkdir $report_dir;
 }
-
 
 # Set the main variables.
 my $sections_dir    = $configs{section_dir};

@@ -41,17 +41,18 @@ Initializes with a data hash consisiting of title and author.
 sub new {
   my ( $class, %data ) = @_;
   bless {
-    _author     => $data{author},
-    _blurb_file => $data{blurb_file},
-    _book_dir   => $data{book_dir},
-    _file_name  => $data{file_name},
-    _image      => $data{image},
-    _output_dir => $data{output_dir},
-    _report_dir => $data{report_dir},
-    _sections   => [],  
-    _title      => $data{title},
-    _url        => $data{url},
-    _words      => {},
+    _author           => $data{author},
+    _blurb_file       => $data{blurb_file},
+    _book_dir         => $data{book_dir},
+    _file_name        => $data{file_name},
+    _image            => $data{image},
+    _output_dir       => $data{output_dir},
+    _report_dir       => $data{report_dir},
+    _sections         => [],  
+    _title            => $data{title},
+    _url              => $data{url},
+    _words            => {},
+    _custom_word_file => $data{custom_word_file},
   }, $class;
 }
 
@@ -115,6 +116,15 @@ Returns the directory for the book project.
 =cut
 
 sub book_dir { $_[0]->{_book_dir} };
+
+
+=head2 custom_word_file
+
+Returns the file with custom words.
+
+=cut
+
+sub custom_word_file { $_[0]->{_custom_word_file} };
 
 
 =head2 file_name

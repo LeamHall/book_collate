@@ -30,6 +30,18 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =head1 SUBROUTINES/METHODS
 
+=head2 _generate_custom_word_data
+
+Creates a hash with custom words as keys
+
+=cut
+
+sub _generate_custom_word_data {
+  my ( $file ) = @_;  
+  my %hash = Book::Collate::Words::build_hash_from_file($file);
+  return %hash;
+}
+
 =head2 _generate_fry_stats
 
 Gives a percentage of Fry list words used against the total unique words used.
@@ -37,8 +49,9 @@ Gives a percentage of Fry list words used against the total unique words used.
 =cut
 
 sub _generate_fry_stats {
-  my ( $word_list ) = @_;
+  my ( $word_list, $custom_word_list ) = @_;
   my %word_list = %$word_list; 
+  my %custom_word_list = %$custom_word_list;
   my %fry_words = %Book::Collate::Words::fry;
   my %used_words;
   my %missed;
@@ -55,6 +68,8 @@ sub _generate_fry_stats {
   foreach my $word ( keys %used_words ){
     if ( defined($fry_words{$word}) ){
       $fry_used{fry}++;
+    } elsif ( defined($custom_word_list{$word}) ){
+      $fry_used{custom}++;
     } else {
       $fry_used{miss}++;
       $missed{$word} = 1;
@@ -86,8 +101,9 @@ Produces a string based on Fry word usage.
 =cut
 
 sub write_fry_stats {
-  my ( $word_list ) = @_;
-  my %fry_used  = _generate_fry_stats( $word_list );
+  print STDOUT @_;
+  my ( $word_list, $custom_word_list ) = @_;
+  my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
   my $string    = "Fry Word Usage: \n";
   $string       .= "  Used   " . $fry_used{fry}     . "\n";
   $string       .= "  Custom " . $fry_used{custom}  . "\n";
@@ -104,6 +120,14 @@ Takes a book object, iterates through the sections, and writes the reports.
 sub write_report_book {
   my ($self, $book)  = @_;
   my %word_list;
+  my %custom_word_list;
+  my $file = $book->custom_word_file();
+  print STDOUT "file is $file.\n";
+  if ( defined($book->custom_word_file() ) ){
+    %custom_word_list = _generate_custom_word_data($book->custom_word_file());
+  }
+  use Data::Dumper;
+  print STDOUT Dumper(\%custom_word_list);
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
     my $section_report_file = $book->report_dir . "/report_" . $section->filename();
@@ -114,7 +138,7 @@ sub write_report_book {
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
-  print $book_file  write_fry_stats(\%word_list);
+  print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
   close $book_file;
   return;
 }

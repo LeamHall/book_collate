@@ -50,12 +50,13 @@ sub show_help {
 
 ## Set up defaults
 my %configs  = (
-  book_dir    => '.',
-  output_dir  => 'book',
-  report      => 1,
-  report_dir  => 'reports',
-  section_dir => 'sections',
-  title       => "",
+  book_dir          => '.',
+  output_dir        => 'book',
+  report            => 1,
+  report_dir        => 'reports',
+  section_dir       => 'sections',
+  title             => "",
+  custom_word_file  => 'data/custom_words.txt',
 );
 
 ## Set up for GetOptions
@@ -114,6 +115,7 @@ my $book = Book::Collate::Book->new(
   output_dir  => $configs{output_dir},
   report_dir  => $configs{report_dir},
   title       => $configs{title}, 
+  custom_word_file => $configs{custom_word_file},
 );
 
 my $t = $book->title();

@@ -29,6 +29,7 @@ my $book      = Book::Collate::Book->new(
   output_dir  => 'book',
   title       => 'Al rides again',
   url         => $ns_url,
+  custom_word_file => 'data/custom_words.txt',
 );
 
 $book->add_section( $section_1 );
@@ -46,6 +47,6 @@ ok( $book->output_dir eq 'book',              'Returns output_dir' );
 ok( $book->title      eq 'Al rides again',    'Returns book title' );
 ok( $book->url        eq $ns_url,             'Returns URL' );
 ok( @{$book->sections} == 2, 'Returns section count' );
-
+ok( $book->custom_word_file eq 'data/custom_words.txt', 'Returns custom word file' );
 done_testing();
 

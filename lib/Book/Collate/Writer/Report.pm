@@ -101,7 +101,6 @@ Produces a string based on Fry word usage.
 =cut
 
 sub write_fry_stats {
-  print STDOUT @_;
   my ( $word_list, $custom_word_list ) = @_;
   my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
   my $string    = "Fry Word Usage: \n";
@@ -122,18 +121,15 @@ sub write_report_book {
   my %word_list;
   my %custom_word_list;
   my $file = $book->custom_word_file();
-  print STDOUT "file is $file.\n";
   if ( defined($book->custom_word_file() ) ){
     %custom_word_list = _generate_custom_word_data($book->custom_word_file());
   }
-  use Data::Dumper;
-  print STDOUT Dumper(\%custom_word_list);
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
     my $section_report_file = $book->report_dir . "/report_" . $section->filename();
     open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
     %word_list = ( %word_list, $section->word_list() );
-    print $section_file write_report_section($section);
+    print $section_file write_report_section($section, \%custom_word_list);
     close($section_file);
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
@@ -151,11 +147,14 @@ Takes a section object and returns the stringified report.
 
 sub write_report_section {
   my $self    = shift;
+  my $custom_word_list = shift;
+  my %custom_word_list = %$custom_word_list;
   my $string  = "Grade Level:             " . $self->grade_level() . "\n";
   $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
   $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
+
   my %word_list = $self->{_report}->word_list();
-  $string     .= write_fry_stats(\%word_list);
+  $string     .= write_fry_stats(\%word_list, \%custom_word_list);
   $string     .= "Word Frequency List:\n";
   my %sorted_word_list = $self->{_report}->sorted_word_list();
   my @unsorted_keys = ( keys %sorted_word_list );

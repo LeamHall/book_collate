@@ -28,6 +28,13 @@ ok($report->sentence_count  == 2,     'Has the right number of sentences');
 ok($report->grade_level     == 1.57,  'Has the right grade level');
 ok($report->syllable_count  == 14,    'Has the right number of syllables');
 
+my $trim_data = "    aaa  bbb  ccc  Cool!   ";
+my $trim_book = Book::Collate::Report->new (
+  string   => $trim_data,
+);
+is($report->raw_data, 'aaa  bbb  ccc  Cool!', "Trimmed the raw data");
+
+
 done_testing();
 
 __DATA__;

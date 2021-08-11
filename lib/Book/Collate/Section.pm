@@ -59,9 +59,23 @@ sub new {
     _filename       => $data{filename},
   };
   bless $self, $class;
+  $self->{_raw_data} = $self->_trim($self->{_raw_data});
   $self->_write_headless_data();
   $self->_write_report();
   return $self;
+}
+
+=head2 _trim
+
+Removes leading and trailing whitespace. Note that this also removes
+the final newline.
+
+=cut
+
+sub _trim {
+  my ( $string )  = @_;
+  my ( $new_string ) = $string =~ m/\s*(\S.*\S)\s*/;
+  return $new_string;
 }
 
 =head2 avg_sentence_length

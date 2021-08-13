@@ -73,8 +73,9 @@ the final newline.
 =cut
 
 sub _trim {
-  my ( $string )  = @_;
-  my ( $new_string ) = $string =~ m/\s*(\S.*\S)\s*/;
+  my ( $self, $string )  = @_;
+  #my $string    = $self->{_raw_data};
+  my ( $new_string ) = $string =~ m/^\s*(\S.*\S)\s*$/s;
   return $new_string;
 }
 

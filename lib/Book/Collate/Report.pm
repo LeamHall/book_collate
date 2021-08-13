@@ -58,6 +58,8 @@ Returns the average sentence length
 
 sub avg_sentence_length {
   my $self = shift;
+  my $wc = $self->word_count;
+  my $sc = $self->sentence_count;
   return sprintf( "%.2f", $self->word_count / $self->sentence_count );
 }
 
@@ -101,6 +103,7 @@ Returns the number of sentences, based off the count of ".", "?", and "!" marks.
 
 sub sentence_count {
   my $self = shift;
+  my $str   = $self->{_string};
   return $self->{_string} =~ tr/[?!.]//;
 }
 

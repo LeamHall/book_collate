@@ -12,7 +12,6 @@
 use strict;
 use warnings;
 use lib "lib";
-#use Section;
 use Book::Collate;
 
 use Test::More;
@@ -77,11 +76,12 @@ my $extra_lines_at_start_section = Book::Collate::Section->new(
 isa_ok( $extra_lines_at_start_section, 'Book::Collate::Section', 'Extra lines section');
 ok( $extra_lines_at_start_section->header() eq '[1429.123.0459] Nowhere', 'Extra lines still finds header');
 
+my $trimable_data = "    aaa  bbb  ccc  Cool!   ";
+my $trim_section  = Book::Collate::Section->new (
+  raw_data   => $trimable_data,
+);
+is($trim_section->raw_data, 'aaa  bbb  ccc  Cool!', "Trimmed the raw data");
+
 
 done_testing();
-
-
-
-
-
 

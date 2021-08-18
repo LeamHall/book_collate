@@ -1,4 +1,4 @@
-# name:     Report.t
+# name:     report.t
 # version:  0.0.1
 # date:     20210116
 # author:   Leam Hall
@@ -27,6 +27,9 @@ ok($report->word_count      == 11,    'Has the right number of words');
 ok($report->sentence_count  == 2,     'Has the right number of sentences');
 ok($report->grade_level     == 1.57,  'Has the right grade level');
 ok($report->syllable_count  == 14,    'Has the right number of syllables');
+
+my %used_words = $report->used_words(qw/one TWO two three three/);
+ok($used_words{two}         == 1,     'Creates used_word hash');
 
 
 done_testing();

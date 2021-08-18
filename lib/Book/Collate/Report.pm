@@ -150,6 +150,25 @@ sub syllable_count {
   return $syllable_count;
 }
 
+
+=head2 used_words
+
+Returns a hash of words used in the text.
+
+=cut
+
+sub used_words {
+  my  @word_list  = @_; 
+  my %used_words;
+  foreach my $word ( @word_list ){
+    $word = lc($word);
+    $used_words{$word} = 1;  
+  }
+
+  return %used_words;
+}
+
+
 =head2 words
 
 Returns array of words, in order.

@@ -32,19 +32,19 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =head2 _generate_custom_word_data
 
-Creates a hash with custom words as keys
+[Move to Report.pm] Creates a hash with custom words as keys
 
 =cut
 
 sub _generate_custom_word_data {
   my ( $file ) = @_;  
-  my %hash = Book::Collate::Words::build_hash_from_file($file);
+  my %hash = Book::Collate::Utils::build_hash_from_file($file);
   return %hash;
 }
 
 =head2 _generate_fry_stats
 
-Gives a percentage of Fry list words used against the total unique words used.
+[Move to Report.pm] Gives a percentage of Fry list words used against the total unique words used.
 
 =cut
 
@@ -61,7 +61,7 @@ sub _generate_fry_stats {
     miss    => 0,
   );
   foreach my $word ( keys %word_list ){
-    $word = scrub_word($word);
+    $word = Book::Collate::Utils::scrub_word($word);
     $used_words{$word} = 1;
   } 
 
@@ -78,21 +78,6 @@ sub _generate_fry_stats {
   return %fry_used;
 }
 
-=head2 scrub_word
-
-Scrubs a series of characters of case and punctuation.
- 
-=cut
-
-sub scrub_word {
-  my ($word)  = @_;
-  chomp $word;
-  $word =~ s/["?!.]//g;
-  $word =~ s/'$//;
-  $word =~ s/\-$//;
-  $word = lc($word);
-  return $word;
-}
 
 =head2 write_fry_stats
 
@@ -172,23 +157,6 @@ sub write_report_section {
   return $string;
 }
 
-=head2 write_used_words
-
-Returns a hash of words used in the text.
-
-=cut
-
-sub used_words {
-  my  @word_list  = @_;
-  #my @word_list = @$word_list;
-  my %used_words;
-  foreach my $word ( @word_list ){
-    $word = lc($word);
-    $used_words{$word} = 1; 
-  }
-
-  return %used_words;
-}
 
 
 =head1 AUTHOR

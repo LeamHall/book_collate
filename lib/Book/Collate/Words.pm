@@ -29,30 +29,7 @@ list is just Fry words.
 =head1 EXPORTS
 
 %fry
-build_hash_from_file()
 
-
-=head2 build_hash_from_file()
-
-Given a valid file with one valid hash key value per line, returns a hash with the
-file lines as keys. The default key is '0'.
-
-=cut
-
-sub build_hash_from_file {
-  my ($file) = @_;
-  my %hash;
-  open my $fh, '<', $file or die "Can't open $file: $!";
-  for my $line ( <$fh> ){
-    chomp $line;
-    next if $line =~ m/^#/;
-    next unless $line; 
-    $line = lc($line);
-    $hash{$line} = 0;
-  } 
-  return %hash;
-}
- 
 =head2 %fry
 
 A hash with Fry words as key, and the Fry list as value.

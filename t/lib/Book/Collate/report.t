@@ -9,7 +9,6 @@
 use strict;
 use warnings;
 use lib "lib";
-#use Report;
 use Book::Collate;
 
 use Test::More;
@@ -23,14 +22,18 @@ my $report  = Book::Collate::Report->new (
 );
 isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
-ok($report->word_count      == 11,    'Has the right number of words');
-ok($report->sentence_count  == 2,     'Has the right number of sentences');
-ok($report->grade_level     == 1.57,  'Has the right grade level');
-ok($report->syllable_count  == 14,    'Has the right number of syllables');
+ok($report->word_count          == 11,    'Has the right number of words' );
+ok($report->sentence_count      == 2,     'Has the right number of sentences' );
+ok($report->grade_level         == 1.57,  'Has the right grade level' );
+ok($report->syllable_count      == 14,    'Has the right number of syllables' );
+ok($report->avg_sentence_length == 5.50,  'Has the right average sentence length' );
+ok($report->avg_word_length     == 3.45,  'Has the right average word length' );
 
 my %used_words = $report->used_words(qw/one TWO two three three/);
-ok($used_words{two}         == 1,     'Creates used_word hash');
+ok($used_words{two}             == 1,     'Creates used_word hash');
 
+my @test_words  = qw/Al looked around wow It be nice if he joined her/;
+ok($report->words               eq @test_words, 'Has the right word list' );
 
 done_testing();
 

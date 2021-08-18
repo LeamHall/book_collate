@@ -10,15 +10,31 @@ use lib "lib";
 use Book::Collate;
 use Test::More;
 
-my $ns_blurb  = 
+my $ns_blurb    = 
 "        Academic over-achiever Dede McKenna needs the girl that barely made 
         it into Firster Academy; can their friendship survive bullies, 
         boys, and felonies?
 ";
-my $ns_image  = 'images/navaksen_low.jpg';
-my $ns_url    = 'https://www.amazon.com/NavakSen-Firster-Academy-Book-1-ebook/dp/B08SKPNMPH';
-my $section_1 = 'Wilbur';
-my $section_2 = 'Al';
+my $ns_image    = 'images/navaksen_low.jpg';
+my $ns_url      = 'https://www.amazon.com/NavakSen-Firster-Academy-Book-1-ebook/dp/B08SKPNMPH';
+my $report_dir  = 't/data/reports';
+my $section_1   = Book::Collate::Section->new( 
+  raw_data      => "[1429.123.0456] Nowhere
+  Al looked around. It was interesting.",
+  number        => 1,
+  has_header    => 1,
+);
+my $section_2   = Book::Collate::Section->new( 
+  raw_data      => "[1429.123.0546] Nowhere
+  Al looked at Wilbur, he was interesting.",
+  number        => 1,
+  has_header    => 1,
+);
+my $report_2_text =
+"Grade Level: 7.37
+Word Frequency List:
+  1   al at he interesting looked was wilbur
+";
 
 my $book      = Book::Collate::Book->new(
   author      => 'Leam Hall',
@@ -26,7 +42,8 @@ my $book      = Book::Collate::Book->new(
   blurb_file  => 't/data/navaksen_blurb.txt',
   file_name   => 'al_rides_again',
   image       => 'images/navaksen_low.jpg',
-  output_dir  => 'book',
+  output_dir  => 't/data/book',
+  report_dir  => $report_dir,
   title       => 'Al rides again',
   url         => $ns_url,
   custom_word_file => 'data/custom_words.txt',
@@ -40,13 +57,55 @@ isa_ok( $book, 'Book::Collate::Book');
 
 ok( $book->author     eq 'Leam Hall',         'Returns author' );
 ok( $book->blurb      eq $ns_blurb,           'Returns book blurb' );
-ok( $book->book_dir   eq '/home/leam/mybook', 'Returns output_dir' );
+ok( $book->book_dir   eq '/home/leam/mybook', 'Returns book_dir' );
+ok( $book->output_dir eq 't/data/book',       'Returns output_dir' );
+ok( $book->report_dir eq 't/data/reports',    'Returns report_dir' );
 ok( $book->file_name  eq 'al_rides_again',    'Returns book file_name' );
 ok( $book->image      eq $ns_image,           'Returns the image location' );
-ok( $book->output_dir eq 'book',              'Returns output_dir' );
 ok( $book->title      eq 'Al rides again',    'Returns book title' );
 ok( $book->url        eq $ns_url,             'Returns URL' );
 ok( @{$book->sections} == 2, 'Returns section count' );
 ok( $book->custom_word_file eq 'data/custom_words.txt', 'Returns custom word file' );
+
+my @test_word_list = qw/one two three four five/;
+my %test_word_hash = $book->add_words(\@test_word_list);
+ok( $book->{_words}{two} == 1,                'Adds word to _word hash');
+
+$book->write_report();
+my $actual_report_file = do {
+  my $file = 't/data/reports/report_2.txt';
+  local $/ = undef;
+  open my $fh, '<', $file or die "Could not open $file: $!";
+  <$fh>;
+};
+ok( $actual_report_file eq $report_2_text,  'Writes section report file correctly');
+
+my $test_book_text =
+"
+__section_break__
+Chapter 001
+
+[1429.123.0456] Nowhere
+
+Al looked around. It was interesting.
+
+
+__section_break__
+Chapter 001
+
+[1429.123.0546] Nowhere
+
+Al looked at Wilbur, he was interesting.
+
+";
+my $actual_book_file = do {
+  my $file = 't/data/book/al_rides_again.txt';
+  local $/ = undef;
+  open my $fh, '<', $file or die "Could not open $file: $!";
+  <$fh>;
+};
+ok( $actual_book_file eq $test_book_text,  'Writes book file correctly');
+$book->write_text();
+
 done_testing();
 

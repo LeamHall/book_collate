@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Exporter 'import';
-#our @EXPORT_OK = qw/ build_hash_from_file scrub_word /;
+our @EXPORT_OK = qw/ build_hash_from_file scrub_word /;
 
 =head1 NAME
 

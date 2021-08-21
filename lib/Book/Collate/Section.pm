@@ -99,6 +99,15 @@ sub avg_word_length {
   return $self->{_report}->avg_word_length;
 }
 
+=head2 custom_word_list
+
+Returns a hash of the custom words.
+
+=cut
+
+sub custom_word_list { return $_[0]->{_report}{_custom_word_list}; }
+
+
 =head2 filename
 
 Returns the filename of the section.

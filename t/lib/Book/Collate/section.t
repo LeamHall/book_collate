@@ -25,6 +25,7 @@ my $section   = Book::Collate::Section->new(
   Al looked around. It was interesting.",
   number      => 1,
   has_header  => 1,
+  filename    => 'some_cool_filename.txt',
 );
 
 my $raw_data = "[1429.123.0456] Nowhere
@@ -41,6 +42,7 @@ ok( $section->number()              == 1, 'Returns section number' );
 ok( $section->raw_data()            eq $raw_data, 'Returns data');
 ok( $section->sentence_count()      == 2, 'Returns sentence count');
 ok( $section->word_count()          == 6, 'Returns proper word count');
+ok( $section->filename()            eq 'some_cool_filename.txt', 'Returns file name' );
 
 
 ####

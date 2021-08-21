@@ -30,54 +30,6 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =head1 SUBROUTINES/METHODS
 
-=head2 _generate_custom_word_data
-
-[Move to Report.pm] Creates a hash with custom words as keys
-
-=cut
-
-sub _generate_custom_word_data {
-  my ( $file ) = @_;  
-  my %hash = Book::Collate::Utils::build_hash_from_file($file);
-  return %hash;
-}
-
-=head2 _generate_fry_stats
-
-[Move to Report.pm] Gives a percentage of Fry list words used against the total unique words used.
-
-=cut
-
-sub _generate_fry_stats {
-  my ( $word_list, $custom_word_list ) = @_;
-  my %word_list = %$word_list; 
-  my %custom_word_list = %$custom_word_list;
-  my %fry_words = %Book::Collate::Words::fry;
-  my %used_words;
-  my %missed;
-  my %fry_used = (
-    fry     => 0,
-    custom  => 0,
-    miss    => 0,
-  );
-  foreach my $word ( keys %word_list ){
-    $word = Book::Collate::Utils::scrub_word($word);
-    $used_words{$word} = 1;
-  } 
-
-  foreach my $word ( keys %used_words ){
-    if ( defined($fry_words{$word}) ){
-      $fry_used{fry}++;
-    } elsif ( defined($custom_word_list{$word}) ){
-      $fry_used{custom}++;
-    } else {
-      $fry_used{miss}++;
-      $missed{$word} = 1;
-    }   
-  }
-  return %fry_used;
-}
-
 
 =head2 write_fry_stats
 
@@ -102,6 +54,7 @@ Takes a book object, iterates through the sections, and writes the reports.
 =cut
 
 sub write_report_book {
+  # Test if given a book object.
   my ($self, $book)  = @_;
   my %word_list;
   my %custom_word_list;
@@ -132,6 +85,7 @@ Takes a section object and returns the stringified report.
 
 sub write_report_section {
   my $self    = shift;
+  # Test if given a section object.
   my $custom_word_list = shift;
   my %custom_word_list = %$custom_word_list;
   my $string  = "Grade Level:             " . $self->grade_level() . "\n";

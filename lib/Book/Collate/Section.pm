@@ -217,31 +217,31 @@ sub word_list {
   return %word_list;
 }
 
-=head2 write_report
-
-Writes the report file.
-
-=cut
-
-sub write_report {
-  my $self    = shift;
-  my $string  = "Grade Level: " . $self->grade_level() . "\n";
-  $string     .= "Word Frequency List:\n";
-  my %word_list = $self->{_report}->sorted_word_list();
-  my @unsorted_keys = ( keys %word_list );
-  my @sorted_keys = reverse ( sort { $a <=> $b } @unsorted_keys );
-  my $max_keys = 25;
-  foreach my $count ( @sorted_keys ){
-    $string .= "  $count  ";
-    foreach my $word ( @{$word_list{$count}} ){
-      $string .= " $word";
-    }
-    $string .= "\n";
-    $max_keys -= 1;
-    last unless $max_keys;
-  }
-  return $string;
-}
+#=head2 write_report
+#
+#Writes the report file.
+#
+#=cut
+#
+#sub write_report {
+#  my $self    = shift;
+#  my $string  = "Grade Level: " . $self->grade_level() . "\n";
+#  $string     .= "Word Frequency List:\n";
+#  my %word_list = $self->{_report}->sorted_word_list();
+#  my @unsorted_keys = ( keys %word_list );
+#  my @sorted_keys = reverse ( sort { $a <=> $b } @unsorted_keys );
+#  my $max_keys = 25;
+#  foreach my $count ( @sorted_keys ){
+#    $string .= "  $count  ";
+#    foreach my $word ( @{$word_list{$count}} ){
+#      $string .= " $word";
+#    }
+#    $string .= "\n";
+#    $max_keys -= 1;
+#    last unless $max_keys;
+#  }
+#  return $string;
+#}
 
 =head2 _write_headless_data
 
@@ -267,8 +267,6 @@ Writes the report data.
 
 sub _write_report {
   my ($self, $text)  = @_;
-  #my $text = $self->headless_data;
-  #$self->{_report} = Book::Collate::Report->new( string => $self->headless_data() );
   $self->{_report} = Book::Collate::Report->new( string => $text );
 }
 

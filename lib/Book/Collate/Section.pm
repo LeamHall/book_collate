@@ -59,9 +59,10 @@ sub new {
     _filename       => $data{filename},
   };
   bless $self, $class;
-  $self->{_raw_data} = $self->_trim($self->{_raw_data});
-  $self->_write_headless_data();
-  $self->_write_report();
+  $self->{_raw_data}      = $self->_trim($self->{_raw_data});
+  $self->{_title}         = $self->_pull_title($self->{_raw_data});
+  $self->{_headless_data} = $self->_write_headless_data($self->{_raw_data});
+  $self->_write_report($self->{_headless_data});
   return $self;
 }
 
@@ -74,8 +75,8 @@ the final newline.
 
 sub _trim {
   my ( $self, $string )  = @_;
-  #my $string    = $self->{_raw_data};
-  my ( $new_string ) = $string =~ m/^\s*(\S.*\S)\s*$/s;
+  my $caller = caller();
+  ( my $new_string ) = $string =~ m/^\s*(\S.*\S)\s*$/s;
   return $new_string;
 }
 
@@ -134,7 +135,7 @@ sub header {
     chomp($line);
     $line =~ s/^\s*//;
     next unless length($line);  # Skips extra blank lines at start.
-    $self->{_header}  = $line;
+    $self->{_header}  = $self->_trim($line);
     last;
   }
   return $self->{_header};
@@ -194,19 +195,7 @@ Returns the title.
 
 =cut
 
-sub title { 
-  my ($self)  = @_;
-  my (@lines) = split(/\n/, $self->raw_data() );
-  foreach my $line (@lines) {
-    if ( $line =~ m/TITLE:/ ) {
-      chomp($line);
-      $line =~ s/^\s*TITLE:\s*//;
-      $self->{_title}  = $line;
-      last;
-    }
-  }
-  return $self->{_title};
-}
+sub title { return $_[0]->{_title} };
 
 =head2 word_count
 
@@ -254,6 +243,21 @@ sub write_report {
   return $string;
 }
 
+=head2 _write_headless_data
+
+Writes the headless data.
+
+=cut
+
+sub _write_headless_data {
+  my ($self, $data)  = @_;
+  ($data = $self->raw_data) =~ s/^TITLE:.*\n//;
+  $data   = $self->_trim($data);
+  $data =~ s/^.*\n// if $self->{_has_header};
+  #$data =~ s/^\s*(.*)\s*$/$1/;
+  #$self->{_headless_data} = $data;
+  return $self->_trim($data);
+}
 
 =head2 _write_report
 
@@ -262,27 +266,33 @@ Writes the report data.
 =cut
 
 sub _write_report {
-  my ($self)  = @_;
-  my $text = $self->headless_data;
-  $self->{_report} = Book::Collate::Report->new( string => $self->headless_data() );
+  my ($self, $text)  = @_;
+  #my $text = $self->headless_data;
+  #$self->{_report} = Book::Collate::Report->new( string => $self->headless_data() );
+  $self->{_report} = Book::Collate::Report->new( string => $text );
 }
 
-=head2 _write_headless_data
+=head2 _pull_title
 
-Writes the headless data.
+Returns the title and the data absent the title.
 
 =cut
 
-sub _write_headless_data {
-  my ($self)  = @_;
-  my $data;
-  ($data = $self->raw_data) =~ s/^TITLE:.*\n//;
-  $data =~ s/^\s*//;
-  # TODO: Not sure this covers multiple empty blank lines.
-  $data =~ s/^.*\n// if $self->{_has_header};
-  $data =~ s/^\s*(.*)\s*$/$1/;
-  $self->{_headless_data} = $data;
+sub _pull_title { 
+  my ($self, $data)  = @_;
+  my $title;
+  my $new_data;
+  my (@lines) = split(/\n/, $data );
+  foreach my $line (@lines) {
+    if ( $line =~ m/TITLE:/ ) {
+      $line   =~ s/^\s*TITLE:\s*//;
+      $title  = $self->_trim($line);
+      last;
+    }
+  }
+  return $title;
 }
+
 
 =head1 AUTHOR
 

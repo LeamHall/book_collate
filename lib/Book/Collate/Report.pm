@@ -153,48 +153,6 @@ sub _generate_fry_stats {
   return %fry_used;
 }
 
-
-=head2 generate_general_fry_stats
-
-Gives a percentage of Fry list words used against the total unique words used.
-
-=cut
-
-sub generate_general_fry_stats {
-  my ( $self, $word_list, $custom_word_list) = @_;
-  my %word_list = %{$word_list};
-  my %custom_word_list; 
-  if ( defined( $custom_word_list ) ){
-    %custom_word_list = %{$custom_word_list};
-  }
-  my %fry_words = %Book::Collate::Words::fry;
-  my %used_words;
-  my %missed;
-  my %fry_used = ( 
-    fry     => 0,
-    custom  => 0,
-    miss    => 0,
-  );  
-  foreach my $word ( keys %word_list ){
-    $word = Book::Collate::Utils::scrub_word($word);
-    $used_words{$word} = 1;
-  }   
-
-  foreach my $word ( keys %used_words ){
-    if ( defined($fry_words{$word}) ){
-      $fry_used{fry}++;
-    #} elsif ( defined($self->{_custom_word_list}{$word}) ){
-    } elsif ( defined($custom_word_list{$word}) ){
-      $fry_used{custom}++;
-    } else {
-      $fry_used{miss}++;
-      $missed{$word} = 1;
-    }   
-  }
-  return %fry_used;
-}
-
-
 =head2 grade_level
 
 Returns the grade level.

@@ -35,13 +35,6 @@ ok($used_words{two}             == 1,     'Creates used_word hash');
 my @test_words  = qw/Al looked around wow It be nice if he joined her/;
 ok($report->words               eq @test_words, 'Has the right word list' );
 
-my %word_list = ( blagy => 1, fred => 1, joe => 1, and => 1 );
-my %custom_word_list = ( blagy => 1 );
-my %fry_report = Book::Collate::Report->generate_general_fry_stats(\%word_list, \%custom_word_list);
-
-
-
-
 done_testing();
 
 __DATA__;

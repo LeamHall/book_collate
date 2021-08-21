@@ -38,35 +38,8 @@ Produces a string based on Fry word usage.
 =cut
 
 sub write_fry_stats {
-  my ( $self, $word_list, $custom_word_list ) = @_;
-  my %word_list = %{$word_list};
-  my %custom_word_list;
-  %custom_word_list = %{$custom_word_list} if defined($custom_word_list);
-  my %fry_words = %Book::Collate::Words::fry;
-  my %used_words;
-  my %missed;
-  my %fry_used = ( 
-    fry     => 0,
-    custom  => 0,
-    miss    => 0,
-  );  
-  foreach my $word ( keys %word_list ){
-    $word = Book::Collate::Utils::scrub_word($word);
-    $used_words{$word} = 1;
-  }   
-
-  foreach my $word ( keys %used_words ){
-    if ( defined($fry_words{$word}) ){
-      $fry_used{fry}++;
-    #} elsif ( defined($self->{_custom_word_list}{$word}) ){
-    } elsif ( defined($custom_word_list{$word}) ){
-      $fry_used{custom}++;
-    } else {
-      $fry_used{miss}++;
-      $missed{$word} = 1;
-    }   
-  }
-  #my %fry_used  = $self->_generate_fry_stats( $word_list, $custom_word_list );
+  my ( $word_list, $custom_word_list ) = @_;
+  my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
   my $string    = "Fry Word Usage: \n";
   $string       .= "  Used   " . $fry_used{fry}     . "\n";
   $string       .= "  Custom " . $fry_used{custom}  . "\n";
@@ -85,23 +58,21 @@ sub write_report_book {
   my ($self, $book)  = @_;
   my %word_list;
   my %custom_word_list;
-  #my $file = $book->custom_word_file();
-  #if ( defined($book->custom_word_file() ) ){
-  #  %custom_word_list = _generate_custom_word_data($book->custom_word_file());
-  #}
+  my $file = $book->custom_word_file();
+  if ( defined($book->custom_word_file() ) ){
+    %custom_word_list = _generate_custom_word_data($book->custom_word_file());
+  }
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
     my $section_report_file = $book->report_dir . "/report_" . $section->filename();
     open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
     %word_list = ( %word_list, $section->word_list() );
-    %custom_word_list = ( %custom_word_list, $section->custom_word_list() ) if (%custom_word_list);
     print $section_file write_report_section($section, \%custom_word_list);
     close($section_file);
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
-  print $book_file  $self->write_fry_stats(\%word_list, \%custom_word_list);
-  #print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
+  print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
   close $book_file;
   return;
 }

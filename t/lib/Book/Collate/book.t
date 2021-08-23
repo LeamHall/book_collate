@@ -71,41 +71,41 @@ my @test_word_list = qw/one two three four five/;
 my %test_word_hash = $book->add_words(\@test_word_list);
 ok( $book->{_words}{two} == 1,                'Adds word to _word hash');
 
-$book->write_report();
-my $actual_report_file = do {
-  my $file = 't/data/reports/report_2.txt';
-  local $/ = undef;
-  open my $fh, '<', $file or die "Could not open $file: $!";
-  <$fh>;
-};
-ok( $actual_report_file eq $report_2_text,  'Writes section report file correctly');
+#$book->write_report();
+#my $actual_report_file = do {
+#  my $file = 't/data/reports/report_2.txt';
+#  local $/ = undef;
+#  open my $fh, '<', $file or die "Could not open $file: $!";
+#  <$fh>;
+#};
+#ok( $actual_report_file eq $report_2_text,  'Writes section report file correctly');
 
-my $test_book_text =
-"
-__section_break__
-Chapter 001
-
-[1429.123.0456] Nowhere
-
-Al looked around. It was interesting.
-
-
-__section_break__
-Chapter 001
-
-[1429.123.0546] Nowhere
-
-Al looked at Wilbur, he was interesting.
-
-";
-my $actual_book_file = do {
-  my $file = 't/data/book/al_rides_again.txt';
-  local $/ = undef;
-  open my $fh, '<', $file or die "Could not open $file: $!";
-  <$fh>;
-};
-ok( $actual_book_file eq $test_book_text,  'Writes book file correctly');
-$book->write_text();
+#my $test_book_text =
+#"
+#__section_break__
+#Chapter 001
+#
+#[1429.123.0456] Nowhere
+#
+#Al looked around. It was interesting.
+#
+#
+#__section_break__
+#Chapter 002
+#
+#[1429.123.0546] Nowhere
+#
+#Al looked at Wilbur, he was interesting.
+#
+#";
+#my $actual_book_file = do {
+#  my $file = 't/data/book/al_rides_again.txt';
+#  local $/ = undef;
+#  open my $fh, '<', $file or die "Could not open $file: $!";
+#  <$fh>;
+#};
+#ok( $actual_book_file eq $test_book_text,  'Writes book file correctly');
+#$book->write_text();
 
 done_testing();
 

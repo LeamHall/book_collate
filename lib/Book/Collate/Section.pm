@@ -217,6 +217,17 @@ sub word_list {
   return %word_list;
 }
 
+#=head2 write_fry_stats
+#
+#Returns a string with the Fry stats.
+#
+#=cut
+#
+#sub write_fry_stats {
+#  my $self = shift;
+#  return $self->{_report}->write_fry_stats();
+#}
+
 #=head2 write_report
 #
 #Writes the report file.

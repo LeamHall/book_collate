@@ -6,7 +6,7 @@ use strict;
 use warnings;
 
 use Exporter 'import';
-#our @EXPORT_OK = qw/ build_hash_from_file scrub_word /;
+our @EXPORT_OK = qw/ build_hash_from_file scrub_word /;
 
 =head1 NAME
 
@@ -26,10 +26,10 @@ Various infrastructure bits to build data structures and what-not.
 
 =head1 Subroutines/Methods
 
-=head2 build_hash_from_file()
+=head2 build_hash_from_file
 
-Given a valid file with one valid hash key value per line, returns a hash with the
-file lines as keys. The default key is '0'. 
+Given a valid file with one valid hash key value per line, optionally with 
+a space seperated value, returns a hash. The default value is '0'. 
 
 =cut
 
@@ -42,7 +42,9 @@ sub build_hash_from_file {
     next if $line =~ m/^#/;
     next unless $line; 
     $line = lc($line);
-    $hash{$line} = 0; 
+    my ($key, $value) = split(/\s+/, $line);
+    $value //= 0;
+    $hash{$key} = $value; 
   } 
   return %hash;
 }

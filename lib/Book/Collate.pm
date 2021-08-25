@@ -25,9 +25,10 @@ word count reports.
 
 =cut 
 
-use Book::Collate::Section;
 use Book::Collate::Book;
 use Book::Collate::Report;
+use Book::Collate::Section;
+use Book::Collate::Utils;
 use Book::Collate::Words;
 use Book::Collate::Writer::Report;
 

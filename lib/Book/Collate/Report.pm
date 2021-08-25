@@ -281,6 +281,22 @@ sub word_list {
 }
 
 
+#=head2 write_fry_stats
+#
+#Returns a string of the Fry stats.
+#
+#=cut
+#
+#sub write_fry_stats {
+#  my ( $word_list, $custom_word_list ) = @_; 
+#  my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
+#  my $string    = "Fry Word Usage: \n";
+#  $string       .= "  Used   " . $fry_used{fry}     . "\n";
+#  $string       .= "  Custom " . $fry_used{custom}  . "\n";
+#  $string       .= "  Miss   " . $fry_used{miss}    . "\n";
+#  return $string;
+#}
+
 
 =head1 AUTHOR
 

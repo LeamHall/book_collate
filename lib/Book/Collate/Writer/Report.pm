@@ -4,6 +4,8 @@ use 5.006;
 use strict;
 use warnings;
 
+use Book::Collate;
+
 =head1 NAME
 
 Book::Collate::Writer::Report
@@ -29,6 +31,46 @@ A list of functions that can be exported.  You can delete this section
 if you don't export anything, such as for a purely object-oriented module.
 
 =head1 SUBROUTINES/METHODS
+
+=head2 _generate_fry_stats
+
+Gives a percentage of Fry list words used against the total unique words used.
+
+=cut
+
+sub _generate_fry_stats {
+  my $self = shift;
+  my %word_list = $self->word_list();
+  my %custom_word_list;
+  if ( defined( $self->custom_word_list() ) ){
+    %custom_word_list = %{$self->custom_word_list()};
+  }
+  my %fry_words = %Book::Collate::Words::fry;
+  my %used_words;
+  my %missed;
+  my %fry_used = (
+    fry     => 0,
+    custom  => 0,
+    miss    => 0,
+  );
+  foreach my $word ( keys %word_list ){
+    $word = Book::Collate::Utils::scrub_word($word);
+    $used_words{$word} = 1;
+  }
+
+  foreach my $word ( keys %used_words ){
+    if ( defined($fry_words{$word}) ){
+      $fry_used{fry}++;
+    #} elsif ( defined($self->{_custom_word_list}{$word}) ){
+    } elsif ( defined($custom_word_list{$word}) ){
+      $fry_used{custom}++;
+    } else {
+      $fry_used{miss}++;
+      $missed{$word} = 1;
+    }
+  }
+  return %fry_used;
+}
 
 
 =head2 write_fry_stats
@@ -60,7 +102,8 @@ sub write_report_book {
   my %custom_word_list;
   my $file = $book->custom_word_file();
   if ( defined($book->custom_word_file() ) ){
-    %custom_word_list = _generate_custom_word_data($book->custom_word_file());
+    #%custom_word_list = _generate_custom_word_data($book->custom_word_file());
+    %custom_word_list = Book::Collate::Utils::build_hash_from_file($book->custom_word_file());
   }
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
@@ -91,6 +134,7 @@ sub write_report_section {
   my $string  = "Grade Level:             " . $self->grade_level() . "\n";
   $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
   $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
+  $string     .= "Fry Stats                " . $self->write_fry_stats() . "\n";
 
   my %word_list = $self->{_report}->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);

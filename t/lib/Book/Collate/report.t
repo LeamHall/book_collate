@@ -15,10 +15,12 @@ use Test::More;
 
 use_ok( 'Book::Collate::Report' ) or die $!;
 
-my $data  = "Al looked around; wow! It'd be \"nice\" if he'd joined her.";
+my $data  = "Al looked around; wow! It'd be \"nice\" if he joined her.";
+my $custom_word_file = 't/data/custom_words.txt';
 
 my $report  = Book::Collate::Report->new (
- string     => $data, 
+  string     => $data, 
+  custom_word_file  => $custom_word_file,
 );
 isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
@@ -35,12 +37,19 @@ ok($used_words{two}             == 1,     'Creates used_word hash');
 my @test_words  = qw/Al looked around wow It be nice if he joined her/;
 ok($report->words               eq @test_words, 'Has the right word list' );
 
-use Data::Dumper;
-my %fry_stats = $report->_generate_fry_stats();
-print Dumper(\%fry_stats);
-ok($fry_stats{fry}     == 0,   'Fry stats fry is 0'    );
-ok($fry_stats{custom}  == 0,   'Fry stats custom is 0' );
-ok($fry_stats{miss}    == 0,   'Fry stats miss is 0'   );
+# Working on Fry and Custom word reporting.
+my $fc_data  = "Al Domici looked around; wow! It'd be nice if Wilbur Lefron joined her.";
+my $fc_custom_word_file = 't/data/custom_words.txt';
+
+my $fc_report  = Book::Collate::Report->new (
+  string            => $fc_data, 
+  custom_word_file  => $fc_custom_word_file,
+);
+isa_ok( $fc_report, 'Book::Collate::Report', 'Initial Report');
+my %fry_stats = $fc_report->_generate_fry_stats();
+ok($fry_stats{fry}     == 6,   'Fry stats fry is 6'    );
+ok($fry_stats{custom}  == 3,   'Fry stats custom is 3' );
+ok($fry_stats{miss}    == 4,   'Fry stats miss is 4'   );
 
 done_testing();
 

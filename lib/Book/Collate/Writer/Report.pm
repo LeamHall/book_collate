@@ -39,12 +39,12 @@ Gives a percentage of Fry list words used against the total unique words used.
 =cut
 
 sub _generate_fry_stats {
-  my $self = shift;
-  my %word_list = $self->word_list();
-  my %custom_word_list;
-  if ( defined( $self->custom_word_list() ) ){
-    %custom_word_list = %{$self->custom_word_list()};
-  }
+  my ( $word_list, $custom_word_list ) = @_;
+  my %word_list = %{$word_list};
+  my %custom_word_list = %{$custom_word_list};
+  #if ( defined( $self->custom_word_list() ) ){
+  #  %custom_word_list = %{$self->custom_word_list()};
+  #}
   my %fry_words = %Book::Collate::Words::fry;
   my %used_words;
   my %missed;
@@ -82,8 +82,7 @@ Produces a string based on Fry word usage.
 sub write_fry_stats {
   my ( $word_list, $custom_word_list ) = @_;
   my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
-  my $string    = "Fry Word Usage: \n";
-  $string       .= "  Used   " . $fry_used{fry}     . "\n";
+  my $string    = "  Used   " . $fry_used{fry}     . "\n";
   $string       .= "  Custom " . $fry_used{custom}  . "\n";
   $string       .= "  Miss   " . $fry_used{miss}    . "\n";
   return $string;
@@ -99,10 +98,9 @@ sub write_report_book {
   # Test if given a book object.
   my ($self, $book)  = @_;
   my %word_list;
-  my %custom_word_list;
+  my %custom_word_list = ();
   my $file = $book->custom_word_file();
   if ( defined($book->custom_word_file() ) ){
-    #%custom_word_list = _generate_custom_word_data($book->custom_word_file());
     %custom_word_list = Book::Collate::Utils::build_hash_from_file($book->custom_word_file());
   }
   # This assumes it is given a book object, which has section objects.
@@ -134,10 +132,11 @@ sub write_report_section {
   my $string  = "Grade Level:             " . $self->grade_level() . "\n";
   $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
   $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
-  $string     .= "Fry Stats                " . $self->write_fry_stats() . "\n";
 
+  $string     .= "Fry Stats              \n";
   my %word_list = $self->{_report}->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);
+
   $string     .= "Word Frequency List:\n";
   my %sorted_word_list = $self->{_report}->sorted_word_list();
   my @unsorted_keys = ( keys %sorted_word_list );

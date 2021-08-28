@@ -183,6 +183,7 @@ Returns a hash of the words used, in lowercase, with the usage count of that wor
 =cut
 
 sub sorted_word_list {
+  print STDOUT "IN SECTION SORTED_WORD_LIST.\n";
   my $self  = shift;
   my %word_list = $self->{_report}->sorted_word_list();
   return %word_list;
@@ -213,20 +214,20 @@ Returns a hash of the words used, in lowercase, with the usage count of that wor
 
 sub word_list {
   my $self  = shift;
-  my %word_list = $self->{_report}->word_list();
+  my %word_list = $self->{_report}->word_list;
   return %word_list;
 }
 
-#=head2 write_fry_stats
-#
-#Returns a string with the Fry stats.
-#
-#=cut
-#
-#sub write_fry_stats {
-#  my $self = shift;
-#  return $self->{_report}->write_fry_stats();
-#}
+=head2 write_fry_stats
+
+Returns a string with the Fry stats.
+
+=cut
+
+sub write_fry_stats {
+  my $self = shift;
+  return $self->{_report}->write_fry_stats();
+}
 
 #=head2 write_report
 #

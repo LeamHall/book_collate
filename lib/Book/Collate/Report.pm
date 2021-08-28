@@ -38,9 +38,10 @@ sub new {
   my $self    = {
     _data             => undef,
     _string           => $data{string},
-    _words            => undef,
+    _words            => [],
     _fry_used         => undef,
-    _custom_word_file => undef,
+    #_custom_word_file => undef,
+    _custom_word_file => $data{custom_word_file},
   };
   bless $self, $class;
 
@@ -94,8 +95,10 @@ sub custom_word_list {
   my ($self) = @_;
   my %custom_word_list;
   if ( defined($self->{_custom_word_file} ) ) {
-    %custom_word_list = $self->_generate_custom_word_data(
+    #%custom_word_list = $self->_generate_custom_word_data(
+    %custom_word_list = Book::Collate::Utils::build_hash_from_file(
       $self->{_custom_word_file} );
+  
   };
   return \%custom_word_list;
   #return %custom_word_list;
@@ -121,7 +124,7 @@ Gives a percentage of Fry list words used against the total unique words used.
 
 sub _generate_fry_stats {
   my $self = shift;
-  my %word_list = $self->word_list();
+  my %word_list = $self->word_list($self->{_words});
   my %custom_word_list; 
   if ( defined( $self->custom_word_list() ) ){
     %custom_word_list = %{$self->custom_word_list()};
@@ -271,7 +274,8 @@ Returns hash of lowercase words as keys, count as values.
 =cut
 
 sub word_list {
-  my ( $self, @words)  = @_;
+  my ( $self)  = @_;
+  my @words = @{$self->{_words}};
   my %word_list;
   foreach my $word ( @words ) {
     $word = lc($word);
@@ -281,21 +285,21 @@ sub word_list {
 }
 
 
-#=head2 write_fry_stats
-#
-#Returns a string of the Fry stats.
-#
-#=cut
-#
-#sub write_fry_stats {
-#  my ( $word_list, $custom_word_list ) = @_; 
-#  my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
-#  my $string    = "Fry Word Usage: \n";
-#  $string       .= "  Used   " . $fry_used{fry}     . "\n";
-#  $string       .= "  Custom " . $fry_used{custom}  . "\n";
-#  $string       .= "  Miss   " . $fry_used{miss}    . "\n";
-#  return $string;
-#}
+=head2 write_fry_stats
+
+Returns a string of the Fry stats.
+
+=cut
+
+sub write_fry_stats {
+  my ( $word_list, $custom_word_list ) = @_; 
+  my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
+  #my $string    = "Fry Word Usage: \n";
+  my $string     = "  Used   " . $fry_used{fry}     . "\n";
+  $string       .= "  Custom " . $fry_used{custom}  . "\n";
+  $string       .= "  Miss   " . $fry_used{miss}    . "\n";
+  return $string;
+}
 
 
 =head1 AUTHOR

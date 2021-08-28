@@ -19,7 +19,7 @@ use_ok( 'Book::Collate::Utils' ) or die $!;
 my $custom_file = 't/data/custom_words.txt';
 my %test_custom = Book::Collate::Utils::build_hash_from_file($custom_file);
 is( ref(%test_custom), ref( my %hash), "build_hash_from_file returns a hash"); 
-is( %test_custom, 3, "Custom list contains three keys");
+is( %test_custom, 6, "Custom list contains five keys");
 is( 1, defined( $test_custom{blagy}), "Specific custom key is already defined");
 is( 0, $test_custom{blagy}, "Correct value for specific custom key");
 

@@ -110,7 +110,8 @@ sub filename { return $_[0]->{_filename}; }
 
 =head2 grade_level
 
-Returns the Flesch-Kincaid Grade Level score per: https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
+Returns the Flesch-Kincaid Grade Level score per: 
+  https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests
 
 =cut
 

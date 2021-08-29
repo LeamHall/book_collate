@@ -40,15 +40,14 @@ sub new {
     _string           => $data{string},
     _words            => [],
     _fry_used         => undef,
-    #_custom_word_file => undef,
-    _custom_word_file => $data{custom_word_file},
+    _custom_words     => $data{custom_words},
   };
   bless $self, $class;
 
-  (my $data       = $self->{_string}) =~ s/[;:!'"?.,]/ /g;
-  $data           =~ s/ (d|ll|m|re|s|t|ve) / /g; 
-  $data           =~ s/\s*(.*)\s*/$1/;
-  $self->{_data}  = $data;
+  (my $data_set   = $self->{_string}) =~ s/[;:!'"?.,]/ /g;
+  $data_set       =~ s/ (d|ll|m|re|s|t|ve) / /g; 
+  $data_set       =~ s/\s*(.*)\s*/$1/;
+  $self->{_data}  = $data_set;
   $self->{_words} = [ split(/\s+/, $self->{_data}) ];
   $self->{_word_list}  = $self->word_list($self->{_words});
   $self->{_custom_word_list} = %{$self->custom_word_list()};
@@ -94,14 +93,10 @@ Returns a hash of custom words, or undef if no file provided.
 sub custom_word_list {
   my ($self) = @_;
   my %custom_word_list;
-  if ( defined($self->{_custom_word_file} ) ) {
-    #%custom_word_list = $self->_generate_custom_word_data(
-    %custom_word_list = Book::Collate::Utils::build_hash_from_file(
-      $self->{_custom_word_file} );
-  
+  if ( defined( $self->{_custom_words} ) ){
+    %custom_word_list = %{$self->{_custom_words}}; 
   };
   return \%custom_word_list;
-  #return %custom_word_list;
 }
 
 =head2 _generate_custom_word_data

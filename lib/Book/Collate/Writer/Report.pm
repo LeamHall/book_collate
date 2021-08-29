@@ -42,9 +42,6 @@ sub _generate_fry_stats {
   my ( $word_list, $custom_word_list ) = @_;
   my %word_list = %{$word_list};
   my %custom_word_list = %{$custom_word_list};
-  #if ( defined( $self->custom_word_list() ) ){
-  #  %custom_word_list = %{$self->custom_word_list()};
-  #}
   my %fry_words = %Book::Collate::Words::fry;
   my %used_words;
   my %missed;
@@ -61,7 +58,6 @@ sub _generate_fry_stats {
   foreach my $word ( keys %used_words ){
     if ( defined($fry_words{$word}) ){
       $fry_used{fry}++;
-    #} elsif ( defined($self->{_custom_word_list}{$word}) ){
     } elsif ( defined($custom_word_list{$word}) ){
       $fry_used{custom}++;
     } else {
@@ -82,7 +78,8 @@ Produces a string based on Fry word usage.
 sub write_fry_stats {
   my ( $word_list, $custom_word_list ) = @_;
   my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
-  my $string    = "  Used   " . $fry_used{fry}     . "\n";
+  my $string    = "Fry Stats:\n";
+  $string       .= "  Used   " . $fry_used{fry}     . "\n";
   $string       .= "  Custom " . $fry_used{custom}  . "\n";
   $string       .= "  Miss   " . $fry_used{miss}    . "\n";
   return $string;
@@ -108,7 +105,7 @@ sub write_report_book {
     my $section_report_file = $book->report_dir . "/report_" . $section->filename();
     open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
     %word_list = ( %word_list, $section->word_list() );
-    print $section_file write_report_section($section, \%custom_word_list);
+    print $section_file write_report_section($section->headless_data(), \%custom_word_list);
     close($section_file);
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
@@ -125,20 +122,20 @@ Takes a section object and returns the stringified report.
 =cut
 
 sub write_report_section {
-  my $self    = shift;
-  # Test if given a section object.
-  my $custom_word_list = shift;
+  my ( $data, $custom_word_list ) = @_;
   my %custom_word_list = %$custom_word_list;
-  my $string  = "Grade Level:             " . $self->grade_level() . "\n";
-  $string     .= "Average Word Length:     " . $self->avg_word_length() . "\n";
-  $string     .= "Average Sentence Length  " . $self->avg_sentence_length() . "\n";
+  my $report  = Book::Collate::Report->new( 
+    string            => $data, 
+    custom_word_file  => 'data/custom_words.txt');
+  my $string  = "Grade Level:             " . $report->grade_level() . "\n";
+  $string     .= "Average Word Length:     " . $report->avg_word_length() . "\n";
+  $string     .= "Average Sentence Length  " . $report->avg_sentence_length() . "\n";
 
-  $string     .= "Fry Stats              \n";
-  my %word_list = $self->{_report}->word_list();
+  my %word_list = $report->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);
 
   $string     .= "Word Frequency List:\n";
-  my %sorted_word_list = $self->{_report}->sorted_word_list();
+  my %sorted_word_list = $report->sorted_word_list();
   my @unsorted_keys = ( keys %sorted_word_list );
   my @sorted_keys = reverse ( sort { $a <=> $b } @unsorted_keys );
   my $max_keys = 25;

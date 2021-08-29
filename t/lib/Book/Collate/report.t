@@ -15,12 +15,14 @@ use Test::More;
 
 use_ok( 'Book::Collate::Report' ) or die $!;
 
-my $data  = "Al looked around; wow! It'd be \"nice\" if he joined her.";
-my $custom_word_file = 't/data/custom_words.txt';
+my $data              = "Al looked around; wow! It'd be \"nice\" if he joined her.";
+my $custom_word_file  = 't/data/custom_words.txt';
+my %custom_word_list  = Book::Collate::Utils::build_hash_from_file($custom_word_file);
 
 my $report  = Book::Collate::Report->new (
   string     => $data, 
   custom_word_file  => $custom_word_file,
+  custom_words      => \%custom_word_list,
 );
 isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
@@ -44,6 +46,7 @@ my $fc_custom_word_file = 't/data/custom_words.txt';
 my $fc_report  = Book::Collate::Report->new (
   string            => $fc_data, 
   custom_word_file  => $fc_custom_word_file,
+  custom_words      => \%custom_word_list,
 );
 isa_ok( $fc_report, 'Book::Collate::Report', 'Initial Report');
 my %fry_stats = $fc_report->_generate_fry_stats();

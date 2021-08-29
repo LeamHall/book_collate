@@ -26,18 +26,22 @@ my $report  = Book::Collate::Report->new (
 );
 isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
-ok($report->word_count          == 11,    'Has the right number of words' );
-ok($report->sentence_count      == 2,     'Has the right number of sentences' );
-ok($report->grade_level         == 1.57,  'Has the right grade level' );
-ok($report->syllable_count      == 14,    'Has the right number of syllables' );
-ok($report->avg_sentence_length == 5.50,  'Has the right average sentence length' );
-ok($report->avg_word_length     == 3.45,  'Has the right average word length' );
+is($report->word_count,          11,     'Has the right number of words' );
+is($report->sentence_count,       2,     'Has the right number of sentences' );
+is($report->grade_level,          1.57,  'Has the right grade level' );
+is($report->syllable_count,      14,     'Has the right number of syllables' );
+is($report->avg_word_length,      3.45,  'Has the right average word length' );
+
+cmp_ok($report->avg_sentence_length, '==',
+    5.50,  'Has the right average sentence length' );
+
+is($report->avg_sentence_length, 5.50,  'Has the right average sentence length' );
 
 my %used_words = $report->used_words(qw/one TWO two three three/);
-ok($used_words{two}             == 1,     'Creates used_word hash');
+is($used_words{two}, 1,     'Creates used_word hash');
 
 my @test_words  = qw/Al looked around wow It be nice if he joined her/;
-ok($report->words               eq @test_words, 'Has the right word list' );
+is($report->words, @test_words, 'Has the right word list' );
 
 # Working on Fry and Custom word reporting.
 my $fc_data  = "Al Domici looked around; wow! It'd be nice if Wilbur Lefron joined her.";
@@ -50,9 +54,9 @@ my $fc_report  = Book::Collate::Report->new (
 );
 isa_ok( $fc_report, 'Book::Collate::Report', 'Initial Report');
 my %fry_stats = $fc_report->_generate_fry_stats();
-ok($fry_stats{fry}     == 6,   'Fry stats fry is 6'    );
-ok($fry_stats{custom}  == 3,   'Fry stats custom is 3' );
-ok($fry_stats{miss}    == 4,   'Fry stats miss is 4'   );
+is($fry_stats{fry},    6,   'Fry stats fry is 6'    );
+is($fry_stats{custom}, 3,   'Fry stats custom is 3' );
+is($fry_stats{miss},   4,   'Fry stats miss is 4'   );
 
 done_testing();
 

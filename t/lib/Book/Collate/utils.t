@@ -29,7 +29,7 @@ is( "yes", Book::Collate::Utils::scrub_word("YES'!"),
 
 my $multi_value_custom_file = 't/data/multi_custom_words.txt';
 my %test_multi_custom = Book::Collate::Utils::build_hash_from_file($multi_value_custom_file);
-ok( $test_multi_custom{unu} eq 'esperanto', "Reads key and value from file" );
+is( $test_multi_custom{unu}, 'esperanto', "Reads key and value from file" );
 
 done_testing();
 

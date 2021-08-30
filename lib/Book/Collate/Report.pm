@@ -63,8 +63,6 @@ Returns the average sentence length
 
 sub avg_sentence_length {
   my $self = shift;
-  my $wc = $self->word_count;
-  my $sc = $self->sentence_count;
   return sprintf( "%.2f", $self->word_count / $self->sentence_count );
 }
 

@@ -55,21 +55,22 @@ $book->add_section( $section_2 );
 use_ok( 'Book::Collate::Book' ) or die $!;
 isa_ok( $book, 'Book::Collate::Book');
 
-ok( $book->author     eq 'Leam Hall',         'Returns author' );
-ok( $book->blurb      eq $ns_blurb,           'Returns book blurb' );
-ok( $book->book_dir   eq '/home/leam/mybook', 'Returns book_dir' );
-ok( $book->output_dir eq 't/data/book',       'Returns output_dir' );
-ok( $book->report_dir eq 't/data/reports',    'Returns report_dir' );
-ok( $book->file_name  eq 'al_rides_again',    'Returns book file_name' );
-ok( $book->image      eq $ns_image,           'Returns the image location' );
-ok( $book->title      eq 'Al rides again',    'Returns book title' );
-ok( $book->url        eq $ns_url,             'Returns URL' );
-ok( @{$book->sections} == 2, 'Returns section count' );
-ok( $book->custom_word_file eq 'data/custom_words.txt', 'Returns custom word file' );
+is( $book->author,            'Leam Hall',          'Returns author' );
+is( $book->blurb,             $ns_blurb,            'Returns book blurb' );
+is( $book->book_dir,          '/home/leam/mybook',  'Returns book_dir' );
+is( $book->output_dir,        't/data/book',        'Returns output_dir' );
+is( $book->report_dir,        't/data/reports',     'Returns report_dir' );
+is( $book->file_name,         'al_rides_again',     'Returns book file_name' );
+is( $book->image,             $ns_image,            'Returns the image location' );
+is( $book->title,             'Al rides again',     'Returns book title' );
+is( $book->url,               $ns_url,              'Returns URL' );
+is( @{$book->sections},       2,                    'Returns section count' );
+is( $book->custom_word_file, 'data/custom_words.txt', 
+  'Returns custom word file' );
 
 my @test_word_list = qw/one two three four five/;
 my %test_word_hash = $book->add_words(\@test_word_list);
-ok( $book->{_words}{two} == 1,                'Adds word to _word hash');
+is( $book->{_words}{two},   1,                      'Adds word to _word hash');
 
 #$book->write_report();
 #my $actual_report_file = do {

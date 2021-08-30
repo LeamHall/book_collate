@@ -35,7 +35,7 @@ is($report->avg_word_length,      3.45,  'Has the right average word length' );
 cmp_ok($report->avg_sentence_length, '==',
     5.50,  'Has the right average sentence length' );
 
-is($report->avg_sentence_length, 5.50,  'Has the right average sentence length' );
+is($report->avg_sentence_length, '5.50',  'Has the right average sentence length' );
 
 my %used_words = $report->used_words(qw/one TWO two three three/);
 is($used_words{two}, 1,     'Creates used_word hash');

@@ -31,5 +31,9 @@ my $multi_value_custom_file = 't/data/multi_custom_words.txt';
 my %test_multi_custom = Book::Collate::Utils::build_hash_from_file($multi_value_custom_file);
 is( $test_multi_custom{unu}, 'esperanto', "Reads key and value from file" );
 
+my $missing_custom_file = 't/data/fred';
+my %test_missing_custom = Book::Collate::Utils::build_hash_from_file($missing_custom_file);
+is( %test_missing_custom, 0, "Empty hash returned when custom file missing");
+
 done_testing();
 

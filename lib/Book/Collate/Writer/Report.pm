@@ -96,7 +96,6 @@ sub write_report_book {
   my ($self, $book)  = @_;
   my %word_list;
   my %custom_word_list = ();
-  my $file = $book->custom_word_file();
   if ( defined($book->custom_word_file() ) ){
     %custom_word_list = Book::Collate::Utils::build_hash_from_file($book->custom_word_file());
   }

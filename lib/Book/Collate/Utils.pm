@@ -36,16 +36,18 @@ a space seperated value, returns a hash. The default value is '0'.
 sub build_hash_from_file {
   my ($file) = @_;
   my %hash;
-  open my $fh, '<', $file or die "Can't open $file: $!";
-  for my $line ( <$fh> ){
-    chomp $line;
-    next if $line =~ m/^#/;
-    next unless $line; 
-    $line = lc($line);
-    my ($key, $value) = split(/\s+/, $line);
-    $value //= 0;
-    $hash{$key} = $value; 
-  } 
+  if ( -e $file ){
+    open my $fh, '<', $file or die "Can't open $file: $!";
+    for my $line ( <$fh> ){
+      chomp $line;
+      next if $line =~ m/^#/;
+      next unless $line; 
+      $line = lc($line);
+      my ($key, $value) = split(/\s+/, $line);
+      $value //= 0;
+      $hash{$key} = $value; 
+    } 
+  }
   return %hash;
 }
 

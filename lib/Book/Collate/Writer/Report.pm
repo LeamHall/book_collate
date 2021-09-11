@@ -99,17 +99,25 @@ sub write_report_book {
   if ( defined($book->custom_word_file() ) ){
     %custom_word_list = Book::Collate::Utils::build_hash_from_file($book->custom_word_file());
   }
+
+  my %section_data_strings;
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
-    my $section_report_file = $book->report_dir . "/report_" . $section->filename();
-    open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
     %word_list = ( %word_list, $section->word_list() );
-    print $section_file write_report_section($section->headless_data(), \%custom_word_list);
-    close($section_file);
+    my $section_string = write_report_section($section->headless_data(), \%custom_word_list);
+    #my $section_report_file = $book->report_dir . "/report_" . $section->filename();
+    #open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
+    #print $section_file write_report_section($section->headless_data(), \%custom_word_list);
+    #close($section_file);
+    $section_data_strings{$section->filename()} = $section_string ; 
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
   print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
+
+  foreach my $title ( keys(%section_data_strings) ){
+    print $book_file "\n\n #### \n\n$title \n\n$section_data_strings{$title}";
+  }
   close $book_file;
   return;
 }

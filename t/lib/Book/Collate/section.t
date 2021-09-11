@@ -32,9 +32,10 @@ my $raw_data = "[1429.123.0456] Nowhere
   Al looked around. It was interesting.";
 
 isa_ok( $section, 'Book::Collate::Section', 'Initial section');
-is( $section->avg_sentence_length(), '3.00',  'Returns average sentence length');
-is( $section->avg_word_length(),     '5.00',  'Returns Average word length');
-is( $section->grade_level(),         7.21,    'Returns proper grade level');
+is( $section->avg_sentence_length(), 3,  'Returns average sentence length');
+is( $section->avg_word_length(),     5,  'Returns Average word length');
+is( $section->grade_level(),         7.21333333333333,
+  'Returns proper grade level');
 is( $section->header(),              '[1429.123.0456] Nowhere', 'Returns header' );
 is( $section->headless_data(),       'Al looked around. It was interesting.', 
   'Returns headless data');
@@ -56,7 +57,7 @@ isa_ok( $title_section, 'Book::Collate::Section',   'Title section');
 is( $title_section->header(),  '[1429.123.0457] Nowhere', 
   'Title section returns header occuring after TITLE:');
 is( $title_section->title(),   'An odd event',      'Title section returns title');
-is( $title_section->avg_sentence_length(), '7.00',  'TEST Returns average sentence length');
+is( $title_section->avg_sentence_length(), 7,  'TEST Returns average sentence length');
 
 
 my $headless_section = Book::Collate::Section->new(

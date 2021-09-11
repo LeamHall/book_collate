@@ -28,14 +28,14 @@ isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
 is($report->word_count,          11,     'Has the right number of words' );
 is($report->sentence_count,       2,     'Has the right number of sentences' );
-is($report->grade_level,          1.57,  'Has the right grade level' );
+is($report->grade_level,          1.57318181818182,
+  'Has the right grade level' );
 is($report->syllable_count,      14,     'Has the right number of syllables' );
-is($report->avg_word_length,      3.45,  'Has the right average word length' );
+is($report->avg_word_length,      3.45454545454545,  
+  'Has the right average word length' );
 
-cmp_ok($report->avg_sentence_length, '==',
-    5.50,  'Has the right average sentence length' );
-
-is($report->avg_sentence_length, '5.50',  'Has the right average sentence length' );
+is($report->avg_sentence_length, 5.5,  
+  'Has the right average sentence length' );
 
 my %used_words = $report->used_words(qw/one TWO two three three/);
 is($used_words{two}, 1,     'Creates used_word hash');

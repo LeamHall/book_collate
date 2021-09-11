@@ -63,7 +63,7 @@ Returns the average sentence length
 
 sub avg_sentence_length {
   my $self = shift;
-  return sprintf( "%.2f", $self->word_count / $self->sentence_count );
+  return $self->word_count / $self->sentence_count ;
 }
 
 
@@ -79,7 +79,7 @@ sub avg_word_length {
   foreach my $word ( $self->words() ){
     $character_count += length($word);
   }
-  return sprintf("%.2f", $character_count / $self->word_count );
+  return $character_count / $self->word_count ;
 }
 
 =head2 custom_word_list
@@ -162,7 +162,7 @@ sub grade_level {
   my $grade = 0.39 * $sentence_average ;
   $grade    += 11.8 * ( $word_average );
   $grade    -= 15.59;
-  return sprintf("%.2f", $grade); 
+  return $grade; 
 }
 
 =head2 sentence_count

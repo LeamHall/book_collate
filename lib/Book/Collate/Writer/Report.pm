@@ -125,11 +125,16 @@ sub write_report_section {
   my ( $data, $custom_word_list ) = @_;
   my %custom_word_list = %$custom_word_list;
   my $report  = Book::Collate::Report->new( 
-    string            => $data, 
-    custom_word_file  => 'data/custom_words.txt');
-  my $string  = "Grade Level:             " . $report->grade_level() . "\n";
-  $string     .= "Average Word Length:     " . $report->avg_word_length() . "\n";
-  $string     .= "Average Sentence Length  " . $report->avg_sentence_length() . "\n";
+    string                => $data, 
+    custom_word_file      => 'data/custom_words.txt');
+  my $grade_level         = sprintf("%.2f", $report->grade_level());  
+  my $avg_word_length     = sprintf("%.2f", $report->avg_word_length());
+  my $avg_sentence_length = sprintf("%.2f", $report->avg_sentence_length());
+
+  my $string;
+  $string     .= "Grade Level:             $grade_level \n";
+  $string     .= "Average Word Length:     $avg_word_length \n";
+  $string     .= "Average Sentence Length  $avg_sentence_length \n";
 
   my %word_list = $report->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);

@@ -117,8 +117,7 @@ Returns the Flesch-Kincaid Grade Level score per:
 
 sub grade_level {
   my ($self)  = @_;
-  my $f = sprintf("%0.2f", $self->{_report}->grade_level());
-  return $f;
+  return $self->{_report}->grade_level();
 }
 
 =head2 header

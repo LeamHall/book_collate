@@ -41,6 +41,7 @@ sub new {
     _words            => [],
     _fry_used         => undef,
     _custom_words     => $data{custom_words},
+    _weak_words       => $data{weak_words},
   };
   bless $self, $class;
 
@@ -50,8 +51,8 @@ sub new {
   $self->{_data}  = $data_set;
   $self->{_words} = [ split(/\s+/, $self->{_data}) ];
   $self->{_word_list}  = $self->word_list($self->{_words});
-  $self->{_custom_word_list} = %{$self->custom_word_list()};
   $self->{_fry_used} = $self->_generate_fry_stats();
+  $self->{_weak_used} = $self->_generate_weak_used();
   return $self; 
 }
 
@@ -82,32 +83,6 @@ sub avg_word_length {
   return $character_count / $self->word_count ;
 }
 
-=head2 custom_word_list
-
-Returns a hash of custom words, or undef if no file provided.
-
-=cut
-
-sub custom_word_list {
-  my ($self) = @_;
-  my %custom_word_list;
-  if ( defined( $self->{_custom_words} ) ){
-    %custom_word_list = %{$self->{_custom_words}}; 
-  };
-  return \%custom_word_list;
-}
-
-=head2 _generate_custom_word_data
-
-Creates a hash with custom words as keys
-
-=cut
-
-sub _generate_custom_word_data {
-  my ( $file ) = @_;  
-  my %hash = Book::Collate::Utils::build_hash_from_file($file);
-  return %hash;
-}
 
 =head2 _generate_fry_stats
 
@@ -118,9 +93,9 @@ Gives a percentage of Fry list words used against the total unique words used.
 sub _generate_fry_stats {
   my $self = shift;
   my %word_list = $self->word_list($self->{_words});
-  my %custom_word_list; 
-  if ( defined( $self->custom_word_list() ) ){
-    %custom_word_list = %{$self->custom_word_list()};
+  my %custom_words; 
+  if ( defined( $self->{_custom_words} ) ){
+    %custom_words = %{$self->{_custom_words} };
   }
   my %fry_words = %Book::Collate::Words::fry;
   my %used_words;
@@ -138,8 +113,7 @@ sub _generate_fry_stats {
   foreach my $word ( keys %used_words ){
     if ( defined($fry_words{$word}) ){
       $fry_used{fry}++;
-    #} elsif ( defined($self->{_custom_word_list}{$word}) ){
-    } elsif ( defined($custom_word_list{$word}) ){
+    } elsif ( defined($custom_words{$word}) ){
       $fry_used{custom}++;
     } else {
       $fry_used{miss}++;
@@ -147,6 +121,29 @@ sub _generate_fry_stats {
     }   
   }
   return %fry_used;
+}
+
+=head2 _generate_weak_used
+
+Returns a hash of weak words used, with the word as key and the count as value.
+
+=cut
+
+sub _generate_weak_used {
+  my $self = shift;
+  my %weak_used;
+  my %weak_words;
+  if ( defined( $self->{_weak_words} ) ){
+    %weak_words = %{$self->{_weak_words} };
+  } 
+  foreach my $word ( $self->words() ){
+    $word = lc($word);    
+    #$weak_used{$word}++;
+    if ( exists( $weak_words{$word} ) ) {
+      $weak_used{$word} += 1;
+    }
+  }
+  return %weak_used;
 }
 
 =head2 grade_level
@@ -287,7 +284,6 @@ Returns a string of the Fry stats.
 sub write_fry_stats {
   my ( $word_list, $custom_word_list ) = @_; 
   my %fry_used  = _generate_fry_stats( $word_list, $custom_word_list );
-  #my $string    = "Fry Word Usage: \n";
   my $string     = "  Used   " . $fry_used{fry}     . "\n";
   $string       .= "  Custom " . $fry_used{custom}  . "\n";
   $string       .= "  Miss   " . $fry_used{miss}    . "\n";

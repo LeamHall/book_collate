@@ -18,11 +18,14 @@ use_ok( 'Book::Collate::Report' ) or die $!;
 my $data              = "Al looked around; wow! It'd be \"nice\" if he joined her.";
 my $custom_word_file  = 't/data/custom_words.txt';
 my %custom_word_list  = Book::Collate::Utils::build_hash_from_file($custom_word_file);
+my $weak_word_file    = 't/data/weak_words.txt';
+my %weak_words        = Book::Collate::Utils::build_hash_from_file($weak_word_file);
 
 my $report  = Book::Collate::Report->new (
   string     => $data, 
-  custom_word_file  => $custom_word_file,
+  #custom_word_file  => $custom_word_file,
   custom_words      => \%custom_word_list,
+  weak_words    => \%weak_words,
 );
 isa_ok( $report, 'Book::Collate::Report', 'Initial Report');
 
@@ -44,19 +47,25 @@ my @test_words  = qw/Al looked around wow It be nice if he joined her/;
 is($report->words, @test_words, 'Has the right word list' );
 
 # Working on Fry and Custom word reporting.
-my $fc_data  = "Al Domici looked around; wow! It'd be nice if Wilbur Lefron joined her.";
+my $fc_data  = "Al Domici looked around; wow! It'd almost be nice if Wilbur Lefron had joined her.";
 my $fc_custom_word_file = 't/data/custom_words.txt';
 
 my $fc_report  = Book::Collate::Report->new (
   string            => $fc_data, 
   custom_word_file  => $fc_custom_word_file,
   custom_words      => \%custom_word_list,
+  weak_words        => \%weak_words,
 );
+
 isa_ok( $fc_report, 'Book::Collate::Report', 'Initial Report');
 my %fry_stats = $fc_report->_generate_fry_stats();
-is($fry_stats{fry},    6,   'Fry stats fry is 6'    );
+is($fry_stats{fry},    8,   'Fry stats fry is 8'    );
 is($fry_stats{custom}, 3,   'Fry stats custom is 3' );
 is($fry_stats{miss},   4,   'Fry stats miss is 4'   );
+
+my %weak_used = $fc_report->_generate_weak_used();
+use Data::Dumper;
+print Dumper( \%weak_used);
 
 done_testing();
 

@@ -53,6 +53,7 @@ sub new {
     _url              => $data{url},
     _words            => {},
     _custom_word_file => $data{custom_word_file},
+    _weak_word_file   => $data{weak_word_file},
   }, $class;
 }
 
@@ -126,6 +127,14 @@ Returns the file with custom words.
 
 sub custom_word_file { $_[0]->{_custom_word_file} };
 
+
+=head2 weak_word_file 
+
+Returns the file of weak words.
+
+=cut
+
+sub weak_word_file { $_[0]->{_weak_word_file} };
 
 =head2 file_name
 

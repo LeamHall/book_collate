@@ -85,6 +85,19 @@ sub write_fry_stats {
   return $string;
 }
 
+=head2 write_weak_word_count
+
+Produces a string of weak word usage.
+
+=cut
+
+sub write_weak_word_count {
+
+  my $string = "Weak Words:\n";
+
+  return $string;
+}
+
 =head2 write_report_book
 
 Takes a book object, iterates through the sections, and writes the reports.
@@ -99,17 +112,27 @@ sub write_report_book {
   if ( defined($book->custom_word_file() ) ){
     %custom_word_list = Book::Collate::Utils::build_hash_from_file($book->custom_word_file());
   }
+  my %weak_word_list = ();
+  if ( defined($book->weak_word_file() ) ){
+    %weak_word_list = Book::Collate::Utils::build_hash_from_file($book->weak_word_file());
+  }
 
   my %section_data_strings;
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
     %word_list = ( %word_list, $section->word_list() );
-    my $section_string = write_report_section($section->headless_data(), \%custom_word_list);
+    my $section_string = write_report_section(
+      $section->headless_data(), 
+      \%custom_word_list,
+      \%weak_word_list,
+    );
+    $section_data_strings{$section->filename()} = $section_string ; 
+
     #my $section_report_file = $book->report_dir . "/report_" . $section->filename();
     #open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
     #print $section_file write_report_section($section->headless_data(), \%custom_word_list);
     #close($section_file);
-    $section_data_strings{$section->filename()} = $section_string ; 
+
   }
   my $book_report_file = $book->report_dir . "/book_report.txt";
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
@@ -146,6 +169,9 @@ sub write_report_section {
   my %word_list = $report->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);
 
+  my @words   = $report->words();
+  $string     .= write_weak_word_count();
+  
   $string     .= "Word Frequency List:\n";
   my %sorted_word_list = $report->sorted_word_list();
   my @unsorted_keys = ( keys %sorted_word_list );

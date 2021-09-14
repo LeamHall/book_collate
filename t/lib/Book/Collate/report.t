@@ -47,7 +47,7 @@ my @test_words  = qw/Al looked around wow It be nice if he joined her/;
 is($report->words, @test_words, 'Has the right word list' );
 
 # Working on Fry and Custom word reporting.
-my $fc_data  = "Al Domici looked around; wow! It'd almost be nice if Wilbur Lefron had joined her.";
+my $fc_data  = "Al Domici almost looked around; wow! It'd almost be nice if Wilbur Lefron had joined her.";
 my $fc_custom_word_file = 't/data/custom_words.txt';
 
 my $fc_report  = Book::Collate::Report->new (
@@ -59,13 +59,14 @@ my $fc_report  = Book::Collate::Report->new (
 
 isa_ok( $fc_report, 'Book::Collate::Report', 'Initial Report');
 my %fry_stats = $fc_report->_generate_fry_stats();
-is($fry_stats{fry},    8,   'Fry stats fry is 8'    );
-is($fry_stats{custom}, 3,   'Fry stats custom is 3' );
-is($fry_stats{miss},   4,   'Fry stats miss is 4'   );
+is($fry_stats{fry},    8,     'Fry stats fry is 8'    );
+is($fry_stats{custom}, 3,     'Fry stats custom is 3' );
+is($fry_stats{miss},   4,     'Fry stats miss is 4'   );
 
 my %weak_used = $fc_report->_generate_weak_used();
-use Data::Dumper;
-print Dumper( \%weak_used);
+is($weak_used{'almost'},  2,      'weak_used count for almost is 2' );
+is($weak_used{'if'},      1,      'weak_used count for if is 1'     );
+is($weak_used{'fred'},    undef,  'weak_used count for fred is undef'   );
 
 done_testing();
 

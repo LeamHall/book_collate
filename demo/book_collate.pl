@@ -57,6 +57,7 @@ my %configs  = (
   section_dir       => 'sections',
   title             => "",
   custom_word_file  => 'data/custom_words.txt',
+  weak_word_file    => '',
 );
 
 ## Set up for GetOptions
@@ -115,7 +116,8 @@ my $book = Book::Collate::Book->new(
   output_dir  => $configs{output_dir},
   report_dir  => $configs{report_dir},
   title       => $configs{title}, 
-  custom_word_file => $configs{custom_word_file},
+  custom_word_file  => $configs{custom_word_file},
+  weak_word_file    => $configs{weak_word_file},
 );
 
 my $t = $book->title();

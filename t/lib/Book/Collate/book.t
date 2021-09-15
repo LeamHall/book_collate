@@ -47,6 +47,7 @@ my $book      = Book::Collate::Book->new(
   title       => 'Al rides again',
   url         => $ns_url,
   custom_word_file => 'data/custom_words.txt',
+  weak_word_file    => 'data/weak_words.txt',
 );
 
 $book->add_section( $section_1 );
@@ -66,7 +67,9 @@ is( $book->title,             'Al rides again',     'Returns book title' );
 is( $book->url,               $ns_url,              'Returns URL' );
 is( @{$book->sections},       2,                    'Returns section count' );
 is( $book->custom_word_file, 'data/custom_words.txt', 
-  'Returns custom word file' );
+  'Returns custom word file'  );
+is( $book->weak_word_file,    'data/weak_words.txt', 
+  'Returns weak word file'    );
 
 my @test_word_list = qw/one two three four five/;
 my %test_word_hash = $book->add_words(\@test_word_list);

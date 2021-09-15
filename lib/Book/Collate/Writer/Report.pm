@@ -92,9 +92,14 @@ Produces a string of weak word usage.
 =cut
 
 sub write_weak_word_count {
-
+  my ( $weak_word_used_ref ) = @_;
+  my %weak_used = %{$weak_word_used_ref};
   my $string = "Weak Words:\n";
-
+  
+  foreach my $word ( sort( keys(%weak_used) ) ){
+    #$string .= "\t$word   $weak_used{$word}\n";
+    $string .= sprintf("%3d   %s\n", $weak_used{$word}, $word); 
+  } 
   return $string;
 }
 
@@ -116,7 +121,6 @@ sub write_report_book {
   if ( defined($book->weak_word_file() ) ){
     %weak_word_list = Book::Collate::Utils::build_hash_from_file($book->weak_word_file());
   }
-
   my %section_data_strings;
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
@@ -152,11 +156,16 @@ Takes a section object and returns the stringified report.
 =cut
 
 sub write_report_section {
-  my ( $data, $custom_word_list ) = @_;
-  my %custom_word_list = %$custom_word_list;
-  my $report  = Book::Collate::Report->new( 
+  my ( $data, $custom_word_list, $weak_word_list ) = @_;
+  my %custom_word_list    = %$custom_word_list;
+  my %weak_words          = %$weak_word_list;
+  my $report              = Book::Collate::Report->new( 
     string                => $data, 
-    custom_word_file      => 'data/custom_words.txt');
+    custom_word_file      => 'data/custom_words.txt',
+    weak_words            => \%weak_words,
+    );
+  my $weak_word_used_ref  = $report->weak_used();
+
   my $grade_level         = sprintf("%.2f", $report->grade_level());  
   my $avg_word_length     = sprintf("%.2f", $report->avg_word_length());
   my $avg_sentence_length = sprintf("%.2f", $report->avg_sentence_length());
@@ -169,10 +178,10 @@ sub write_report_section {
   my %word_list = $report->word_list();
   $string     .= write_fry_stats(\%word_list, \%custom_word_list);
 
-  my @words   = $report->words();
-  $string     .= write_weak_word_count();
+  my @words     = $report->words();
+  $string       .= write_weak_word_count($weak_word_used_ref);
   
-  $string     .= "Word Frequency List:\n";
+  $string       .= "Word Frequency List:\n";
   my %sorted_word_list = $report->sorted_word_list();
   my @unsorted_keys = ( keys %sorted_word_list );
   my @sorted_keys = reverse ( sort { $a <=> $b } @unsorted_keys );

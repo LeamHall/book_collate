@@ -45,6 +45,7 @@ sub new {
   };
   bless $self, $class;
 
+  
   (my $data_set   = $self->{_string}) =~ s/[;:!'"?.,]/ /g;
   $data_set       =~ s/ (d|ll|m|re|s|t|ve) / /g; 
   $data_set       =~ s/\s*(.*)\s*/$1/;
@@ -53,6 +54,7 @@ sub new {
   $self->{_word_list}  = $self->word_list($self->{_words});
   $self->{_fry_used} = $self->_generate_fry_stats();
   $self->{_weak_used} = $self->_generate_weak_used();
+  
   return $self; 
 }
 
@@ -138,12 +140,11 @@ sub _generate_weak_used {
   } 
   foreach my $word ( $self->words() ){
     $word = lc($word);    
-    #$weak_used{$word}++;
     if ( exists( $weak_words{$word} ) ) {
       $weak_used{$word} += 1;
     }
   }
-  return %weak_used;
+  return \%weak_used;
 }
 
 =head2 grade_level
@@ -235,6 +236,16 @@ sub used_words {
   return %used_words;
 }
 
+
+=head2 weak_used
+
+Returns the hash of weak words used.
+
+=cut
+
+sub weak_used {
+  return \%{$_[0]->{_weak_used}};
+}
 
 =head2 words
 

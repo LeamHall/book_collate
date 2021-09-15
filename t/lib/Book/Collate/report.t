@@ -63,7 +63,8 @@ is($fry_stats{fry},    8,     'Fry stats fry is 8'    );
 is($fry_stats{custom}, 3,     'Fry stats custom is 3' );
 is($fry_stats{miss},   4,     'Fry stats miss is 4'   );
 
-my %weak_used = $fc_report->_generate_weak_used();
+my $weak_used_ref = $fc_report->weak_used();
+my %weak_used = %{$weak_used_ref};
 is($weak_used{'almost'},  2,      'weak_used count for almost is 2' );
 is($weak_used{'if'},      1,      'weak_used count for if is 1'     );
 is($weak_used{'fred'},    undef,  'weak_used count for fred is undef'   );

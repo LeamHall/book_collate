@@ -183,7 +183,6 @@ Returns a hash of the words used, in lowercase, with the usage count of that wor
 =cut
 
 sub sorted_word_list {
-  print STDOUT "IN SECTION SORTED_WORD_LIST.\n";
   my $self  = shift;
   my %word_list = $self->{_report}->sorted_word_list();
   return %word_list;

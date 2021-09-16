@@ -44,7 +44,7 @@ my $book      = Book::Collate::Book->new(
   image       => 'images/navaksen_low.jpg',
   output_dir  => 't/data/book',
   report_dir  => $report_dir,
-  title       => 'Al rides again',
+  title       => "Domici War: (Dragons' Sacrifice): Al rides again",
   url         => $ns_url,
   custom_word_file => 'data/custom_words.txt',
   weak_word_file    => 'data/weak_words.txt',
@@ -63,7 +63,10 @@ is( $book->output_dir,        't/data/book',        'Returns output_dir' );
 is( $book->report_dir,        't/data/reports',     'Returns report_dir' );
 is( $book->file_name,         'al_rides_again',     'Returns book file_name' );
 is( $book->image,             $ns_image,            'Returns the image location' );
-is( $book->title,             'Al rides again',     'Returns book title' );
+is( $book->title,             "Domici War: (Dragons' Sacrifice): Al rides again",     
+  'Returns book title' );
+is( $book->title_as_filename, 'domici_war_dragons_sacrifice_al_rides_again',     
+  'Returns title as filename');
 is( $book->url,               $ns_url,              'Returns URL' );
 is( @{$book->sections},       2,                    'Returns section count' );
 is( $book->custom_word_file, 'data/custom_words.txt', 

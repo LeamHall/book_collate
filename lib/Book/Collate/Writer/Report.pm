@@ -138,8 +138,10 @@ sub write_report_book {
     #close($section_file);
 
   }
-  my $book_report_file = $book->report_dir . "/book_report.txt";
+  my $book_report_filename = $book->title_as_filename . "_report.txt";
+  my $book_report_file = $book->report_dir . "/" . $book_report_filename;
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
+  print $book_file "Report for:   " . $book->title . "\n\n";
   print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
 
   foreach my $title ( sort( keys(%section_data_strings) ) ){

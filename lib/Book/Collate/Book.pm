@@ -185,6 +185,31 @@ Returns the title.
 
 sub title     { $_[0]->{_title}     };
 
+=head2 title_as_filename
+
+Returns the book title as a lowercase string, with underscores replacing spaces and punctuation.
+
+=cut
+
+sub title_as_filename {
+  my $self = shift;
+  my $title_string;
+  my $title_orig = $self->title;
+  my $last_char = '_';
+  foreach my $char ( split( //, $title_orig ) ){
+    if ( $char =~ m/[A-Za-z]/ ){
+      $last_char = lc($char);
+      $title_string .= $last_char;
+    } elsif ( $last_char eq '_' ){
+      next;
+    } else {
+      $last_char = '_';
+      $title_string .= $last_char;
+    }
+  }
+  return $title_string;
+};
+
 =head2 url
 
 Return the URL of the book.

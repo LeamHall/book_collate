@@ -103,6 +103,25 @@ sub write_weak_word_count {
   return $string;
 }
 
+=head2 accumulate_weak_used
+
+Returns a ref to a hash of cumulative weak words used.
+
+=cut
+
+sub accumulate_weak_used {
+  my ($book_weak_used, $section_weak_used) = @_;
+  my %book_weak_used      = %{$book_weak_used};
+  my %section_weak_used   = %{$section_weak_used};
+
+  foreach my $key ( keys( %section_weak_used ) ){
+    $book_weak_used{$key} += $section_weak_used{$key};
+  }
+  
+  return \%book_weak_used;
+}
+
+
 =head2 write_report_book
 
 Takes a book object, iterates through the sections, and writes the reports.
@@ -121,21 +140,28 @@ sub write_report_book {
   if ( defined($book->weak_word_file() ) ){
     %weak_word_list = Book::Collate::Utils::build_hash_from_file($book->weak_word_file());
   }
+  my %book_weak_used;
+
   my %section_data_strings;
   # This assumes it is given a book object, which has section objects.
   foreach my $section ( @{$book->sections()} ){
     %word_list = ( %word_list, $section->word_list() );
-    my $section_string = write_report_section(
+    my ($section_string, $section_weak_word_used) = write_report_section(
       $section->headless_data(), 
       \%custom_word_list,
       \%weak_word_list,
     );
     $section_data_strings{$section->filename()} = $section_string ; 
 
+    %book_weak_used = %{accumulate_weak_used(\%book_weak_used, $section_weak_word_used)};
+
+    ### Keep this idea if we write individual section reports.
     #my $section_report_file = $book->report_dir . "/report_" . $section->filename();
-    #open( my $section_file, '>', $section_report_file ) or die "Can't open $section_report_file: $!";
+    #open( my $section_file, '>', $section_report_file ) 
+      #or die "Can't open $section_report_file: $!";
     #print $section_file write_report_section($section->headless_data(), \%custom_word_list);
     #close($section_file);
+    ###
 
   }
   my $book_report_filename = $book->title_as_filename . "_report.txt";
@@ -143,6 +169,9 @@ sub write_report_book {
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
   print $book_file "Report for:   " . $book->title . "\n\n";
   print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
+  print $book_file "\n";
+  print $book_file write_weak_word_count(\%book_weak_used);
+  print $book_file "\n";
 
   foreach my $title ( sort( keys(%section_data_strings) ) ){
     print $book_file "\n\n #### \n\n$title \n\n$section_data_strings{$title}";
@@ -197,7 +226,7 @@ sub write_report_section {
     $max_keys -= 1;
     last unless $max_keys;
   }
-  return $string;
+  return ($string, $weak_word_used_ref);
 }
 
 

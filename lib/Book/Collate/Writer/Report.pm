@@ -142,7 +142,7 @@ sub write_report_book {
   open( my $book_file, '>', $book_report_file ) or die "Can't open $book_report_file: $!";
   print $book_file  write_fry_stats(\%word_list, \%custom_word_list);
 
-  foreach my $title ( keys(%section_data_strings) ){
+  foreach my $title ( sort( keys(%section_data_strings) ) ){
     print $book_file "\n\n #### \n\n$title \n\n$section_data_strings{$title}";
   }
   close $book_file;
